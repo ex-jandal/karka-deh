@@ -1,0 +1,192 @@
+
+
+
+CREATE TABLE users (
+    id NUMBER PRIMARY KEY,
+    username VARCHAR2(64) UNIQUE NOT NULL,
+    email VARCHAR2(128) UNIQUE NOT NULL,
+    password_hash VARCHAR2(255) NOT NULL,
+    bio CLOB,
+    avatar_url VARCHAR2(512),
+    role VARCHAR2(16) DEFAULT 'user', -- user | admin | author
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_users_id
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    :NEW.id := users_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE posts (
+    id NUMBER PRIMARY KEY,
+    title VARCHAR2(255) NOT NULL,
+    slug VARCHAR2(255) UNIQUE NOT NULL,
+    content CLOB NOT NULL,
+    author_id NUMBER NOT NULL,
+    published BOOLEAN DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id)
+);
+
+CREATE SEQUENCE posts_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_posts_id
+BEFORE INSERT ON posts
+FOR EACH ROW
+BEGIN
+    :NEW.id := posts_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE comments (
+    id NUMBER PRIMARY KEY,
+    post_id NUMBER NOT NULL,
+    author_id NUMBER NOT NULL,
+    content CLOB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_comments_post FOREIGN KEY (post_id) REFERENCES posts(id),
+    CONSTRAINT fk_comments_author FOREIGN KEY (author_id) REFERENCES users(id)
+);
+
+CREATE SEQUENCE comments_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_comments_id
+BEFORE INSERT ON comments
+FOR EACH ROW
+BEGIN
+    :NEW.id := comments_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE tags (
+    id NUMBER PRIMARY KEY,
+    name VARCHAR2(64) UNIQUE NOT NULL
+);
+
+CREATE SEQUENCE tags_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_tags_id
+BEFORE INSERT ON tags
+FOR EACH ROW
+BEGIN
+    :NEW.id := tags_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE post_tags (
+    post_id NUMBER NOT NULL,
+    tag_id NUMBER NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    CONSTRAINT fk_post_tags_post FOREIGN KEY (post_id) REFERENCES posts(id),
+    CONSTRAINT fk_post_tags_tag FOREIGN KEY (tag_id) REFERENCES tags(id)
+);
+
+
+CREATE TABLE likes (
+    id NUMBER PRIMARY KEY,
+    user_id NUMBER NOT NULL,
+    post_id NUMBER NOT NULL,
+    liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_likes_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_likes_post FOREIGN KEY (post_id) REFERENCES posts(id),
+    CONSTRAINT unique_like UNIQUE (user_id, post_id)
+);
+
+CREATE SEQUENCE likes_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_likes_id
+BEFORE INSERT ON likes
+FOR EACH ROW
+BEGIN
+    :NEW.id := likes_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE views (
+    id NUMBER PRIMARY KEY,
+    post_id NUMBER NOT NULL,
+    user_id NUMBER, -- nullable for anonymous
+    viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR2(45),
+    user_agent VARCHAR2(256),
+    CONSTRAINT fk_views_post FOREIGN KEY (post_id) REFERENCES posts(id),
+    CONSTRAINT fk_views_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE SEQUENCE views_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_views_id
+BEFORE INSERT ON views
+FOR EACH ROW
+BEGIN
+    :NEW.id := views_seq.NEXTVAL;
+END;
+/
+
+
+CREATE TABLE media (
+    id NUMBER PRIMARY KEY,
+    file_name VARCHAR2(255) NOT NULL,
+    file_url VARCHAR2(512) NOT NULL,
+    mime_type VARCHAR2(128),
+    uploaded_by NUMBER NOT NULL,
+    post_id NUMBER,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_media_user FOREIGN KEY (uploaded_by) REFERENCES users(id),
+    CONSTRAINT fk_media_post FOREIGN KEY (post_id) REFERENCES posts(id)
+);
+
+CREATE SEQUENCE media_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_media_id
+BEFORE INSERT ON media
+FOR EACH ROW
+BEGIN
+    :NEW.id := media_seq.NEXTVAL;
+END;
+/
+
+🗝️ sessions (refresh tokens/session storage)
+
+CREATE TABLE sessions (
+    id NUMBER PRIMARY KEY,
+    user_id NUMBER NOT NULL,
+    refresh_token VARCHAR2(512) NOT NULL,
+    user_agent VARCHAR2(256),
+    ip_address VARCHAR2(45),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP,
+    revoked BOOLEAN DEFAULT 0,
+    CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE SEQUENCE sessions_seq START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trg_sessions_id
+BEFORE INSERT ON sessions
+FOR EACH ROW
+BEGIN
+    :NEW.id := sessions_seq.NEXTVAL;
+END;
+/
+
+
+You’ll probably want these:
+
+-- Index for faster lookups
+CREATE INDEX idx_posts_slug ON posts(slug);
+CREATE INDEX idx_comments_post ON comments(post_id);
+CREATE INDEX idx_likes_post ON likes(post_id);
+CREATE INDEX idx_views_post ON views(post_id);
+CREATE INDEX idx_post_tags_tag ON post_tags(tag_id);
