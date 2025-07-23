@@ -22,8 +22,10 @@ export default {
 
 <template>
 <Navbar />
-<div class="main flex h-screen justify-center items-center mr-22 ml-2 mb-2 mt-2">
-Hello Mr.Satan
+<div class="main flex flex-col justify-center items-center sm:mr-20 mr-2 ml-2 sm:mt-1
+    mt-20">
+  <h1>Hello Mr.Satan</h1>
+  <button class="bg-red-950 text-white" @click="increamnt">count: {{ number }}</button>
 </div>
 </template>
 
@@ -31,17 +33,17 @@ Hello Mr.Satan
 body {
   background-color: #100203;
 }
+
 button {
   width: 100px;
-  background-color: black;
 }
 
 .main {
-  height: calc(100vh - 14px);
+  height: calc(100vh - 10px);
   /* color: white; */
   background-color: white;
-  box-shadow: 0px 0px 5px black inset;
-  border: 1px solid black;
+  box-shadow: 0px 0px 10px black inset;
+  /* border: 1px solid black; */
   border-radius: 20px;
 }
 </style>
