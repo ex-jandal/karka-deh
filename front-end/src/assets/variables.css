@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'Playpen Sans Arabic';
+  src: url('@assets/fonts/static/PlaypenSansArabic-Regular.ttf') format(ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Playpen Sans Arabic';
+  src: url('@assets/fonts/static/PlaypenSansArabic-Bold.ttf') format(ttf);
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Playpen Sans Arabic';
+  src: url('@assets/fonts/static/PlaypenSansArabic-Light.ttf') format(ttf);
+  font-weight: light;
+  font-style: normal;
+}
+
+:root {
+  --main-color: #460809;
+  --second-color: #6a1a19;
+  --therd-color: #eebf11;
+  --forth-color: #f6f6f5;
+  --fifth-color: #976c69;
+  --main-font: "Playpen Sans Arabic", cursive;
+}
+
+/* body { */
+/*   font-family: */
+/*     Inter, */
+/*     -apple-system, */
+/*     BlinkMacSystemFont, */
+/*     'Segoe UI', */
+/*     Roboto, */
+/*     Oxygen, */
+/*     Ubuntu, */
+/*     Cantarell, */
+/*     'Fira Sans', */
+/*     'Droid Sans', */
+/*     'Helvetica Neue', */
+/*     sans-serif; */
+/* } */
