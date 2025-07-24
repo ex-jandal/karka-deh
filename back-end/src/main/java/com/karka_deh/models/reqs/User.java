@@ -1,0 +1,90 @@
+package com.karka_deh.models.reqs;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
+
+public class User {
+
+  @NotNull(message = "id is required")
+  private UUID id;
+
+  @NotNull(message = "username is required")
+  @Size(min = 3, max = 64)
+  private String username;
+
+  @NotNull(message = "email is required")
+  @Email(message = "email is invalid")
+  private String email;
+
+  // TODO: create another class for the request that the user will give their
+  // password in plain text, and another class to store it hashed.
+  // Something like that
+
+  @NotNull(message = "password_hash is required")
+  @JsonAlias("password_hash")
+  private String passwordHash;
+
+  @Null
+  @JsonAlias("created_at")
+  private LocalDateTime createdAt;
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+
+  }
+
+  /*
+   * // TODO: maybe we can do these too?
+   * 
+   * @Null
+   * String bio;
+   *
+   * 
+   * @JsonAlias("avatar_base64")
+   * String avatarBase64
+   * 
+   */
+}

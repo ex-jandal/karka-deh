@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+
+    <form id="loginForm">
+      <input
+        type="text"
+        name="username"
+        placeholder="Email / Username"
+        required
+      />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="error" id="errorMsg"></div>
+    </form>
+
+    <div class="oauth">
+      <p>Or login with:</p>
+      <a href="/oauth2/authorization/google">Google</a>
+      <a href="/oauth2/authorization/github">GitHub</a>
+    </div>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const errorMsg = document.getElementById("errorMsg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMsg.textContent = "";
+
+        const formData = new FormData(form);
+        const body = {
+          username: formData.get("username"),
+          password: formData.get("password"),
+        };
+
+        const res = await fetch("/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        if (res.ok) {
+          window.location.href = "/home";
+        } else {
+          const text = await res.text();
+          errorMsg.textContent = text || "Login failed";
+        }
+      });
+    </script>
+  </body>
+</html>
