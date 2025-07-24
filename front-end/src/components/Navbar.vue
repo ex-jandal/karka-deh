@@ -18,9 +18,9 @@ export default {
   <nav class="fixed top-0 right-0 pr-2 flex-row m-2
               flex justify-between items-center gap-2 h-20 overflow-hidden">
     <div class="right-side shadow-sm flex flex-row pr-5 pl-4">
-      <router-link to="" class="flex flex-row justify-center items-center">
+      <router-link to="/" class="flex flex-row justify-center items-center">
         <div class="nav-logo ml-2">
-          <img class="ml-2" src="../assets/logo.svg" alt="logo" width="45px">
+          <img class="ml-2" src="../assets/logo.png" alt="logo" width="45px">
         </div>
       </router-link>
       <router-link :class="barIcons" to="">
@@ -33,17 +33,18 @@ export default {
       </router-link>
     </div>
 
-    <div class="left-side shadow-sm flex-row pr-5 pl-4 m-2 h-16 w-25">
-      <router-like to="" class="user-info relative mr-2 mt-6 mb-2 ml-2 flex flex-row justify-center items-center ">
-        <font-awesome-icon :icon="['fas', 'user']"/>
-      </router-like>
-    </div>
+    <router-link to="" class="user-info relative">
+      <div class="left-side shadow-sm flex flex-row justify-center items-center m-2 h-16 w-25">
+          <font-awesome-icon :icon="['fas', 'user']"/>
+      </div>
+    </router-link>
   </nav>
 
 </template>
 <style>
 nav {
   width: calc(100% - 16px);
+  z-index: 9;
 }
 
 .right-side {

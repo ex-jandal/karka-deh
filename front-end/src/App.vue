@@ -3,47 +3,39 @@ import Navbar from './components/Navbar.vue'
 document.documentElement.lang = 'ar';
 document.documentElement.dir = 'rtl';
 </script>
-<script>
-export default {
-  data() {
-    return {
-      number: 0,
-    }
-  },
-  methods: {
-    increamnt() {
-      this.number++
-    }
-  }
-}
-</script>
-<script setup>
-</script>
 
 <template>
 <Navbar />
-<div class="main flex flex-col justify-center items-center sm:mr-20 mr-2 ml-2 sm:mt-1
-    mt-20">
-  <h1>Hello Mr.Satan</h1>
-  <button class="" @click="increamnt">count: {{ number }}</button>
+<div class="main flex flex-col justify-center items-center ">
+    <router-view class=""></router-view>
 </div>
 </template>
 
 <style>
-body {
-  background-color: var(--main-color);
+@import url('https://fonts.googleapis.com/css2?family=Oi&family=Playpen+Sans+Arabic:wght@100..800&display=swap');
+:root {
+  --main-color: #460809;
+  --second-color: #6a1a19;
+  --therd-color: #eebf11;
+  --forth-color: #f6f6f5;
+  --fifth-color: #976c69;
+  --main-font: "Playpen Sans Arabic", cursive;
+  --title-font: "oi"
 }
 
-button {
-  width: 100px;
+body {
+  font-family: var(--main-font);
 }
 
 .main {
   height: calc(100vh - 10px);
+  margin: auto;
+  max-width: 1024px;
+  margin-top: 100px;
   /* color: white; */
-  background-color: white;
-  box-shadow: 0px 0px 10px black inset;
+/*   background-color: white; */
+/*   box-shadow: 0px 0px 10px black inset; */
   /* border: 1px solid black; */
-  border-radius: 20px;
+/*   border-radius: 20px; */
 }
 </style>
