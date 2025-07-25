@@ -25,7 +25,7 @@
   --therd-color: #eebf11;
   --forth-color: #f6f6f5;
   --fifth-color: #976c69;
-  --main-font: "Playpen Sans Arabic", cursive;
+  --main-font: 'Playpen Sans Arabic', cursive;
 }
 
 body {

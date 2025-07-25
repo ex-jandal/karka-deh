@@ -1,14 +1,14 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
-document.documentElement.lang = 'ar';
-document.documentElement.dir = 'rtl';
+document.documentElement.lang = 'ar'
+document.documentElement.dir = 'rtl'
 </script>
 
 <template>
-<Navbar />
-<div class="main flex flex-col justify-center items-center ">
+  <Navbar />
+  <div class="main flex flex-col justify-center items-center">
     <router-view class=""></router-view>
-</div>
+  </div>
 </template>
 
 <style>
@@ -19,8 +19,8 @@ document.documentElement.dir = 'rtl';
   --therd-color: #eebf11;
   --forth-color: #f6f6f5;
   --fifth-color: #976c69;
-  --main-font: "Playpen Sans Arabic", cursive;
-  --title-font: "oi"
+  --main-font: 'Playpen Sans Arabic', cursive;
+  --title-font: 'oi';
 }
 
 body {
@@ -33,9 +33,9 @@ body {
   max-width: 1024px;
   margin-top: 100px;
   /* color: white; */
-/*   background-color: white; */
-/*   box-shadow: 0px 0px 10px black inset; */
+  /*   background-color: white; */
+  /*   box-shadow: 0px 0px 10px black inset; */
   /* border: 1px solid black; */
-/*   border-radius: 20px; */
+  /*   border-radius: 20px; */
 }
 </style>
