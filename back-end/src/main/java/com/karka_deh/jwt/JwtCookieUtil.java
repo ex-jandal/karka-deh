@@ -13,6 +13,8 @@ public class JwtCookieUtil {
     cookie.setPath("/");
     cookie.setMaxAge(maxAgeSeconds);
     cookie.setSecure(false); // set to true if you run HTTPS
+    // TODO: look for it
+    //
     // cookie.setSameSite("Strict"); // to prevent CSRF, adjust if needed
     return cookie;
   }

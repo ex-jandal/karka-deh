@@ -2,9 +2,6 @@
 package com.karka_deh.controllers.auth;
 
 import org.springframework.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.Cookie;
@@ -15,8 +12,6 @@ import java.util.Map;
 import com.karka_deh.jwt.JwtCookieUtil;
 import com.karka_deh.jwt.JwtUtil;
 import com.karka_deh.models.reqs.AuthCred;
-import com.karka_deh.models.reqs.User;
-import com.karka_deh.repos.PostRepo;
 import com.karka_deh.repos.UserRepo;
 
 @RestController

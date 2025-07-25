@@ -34,6 +34,8 @@ public class SecurityConfig {
     this.jwtFilter = jwtFilter;
   }
 
+  // for the unused vars in the lambdas
+  @SuppressWarnings("unused")
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http,
       AuthenticationManager authManager) throws Exception {
@@ -41,17 +43,20 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
+            // allow these urls for everyone
             .requestMatchers("/", "/auth/**", "/login.html", "/oauth2/**").permitAll()
+
+            // the rest are for authenticated users only, that's what the JwtFilter job is
             .anyRequest().authenticated())
         .oauth2Login(oauth2 -> oauth2
             .successHandler(this::oauth2SuccessHandler)
-            .failureHandler((_request, response, exception) -> {
+            .failureHandler((_request, response, _exception) -> {
               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               response.setContentType("application/json");
               response.getWriter().write("{\"error\": \"OAuth2 login failed\"}");
             }))
         .exceptionHandling(ex -> ex
-            .authenticationEntryPoint((request, response, authException) -> {
+            .authenticationEntryPoint((_request, response, _authException) -> {
               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               response.setContentType("application/json");
               response.getWriter().write("{\"error\": \"Unauthorized\"}");
@@ -67,13 +72,27 @@ public class SecurityConfig {
     return config.getAuthenticationManager();
   }
 
+  /**
+   * 
+   * runs once the oauth2 is good, which if the user
+   * logged in using either using Github or Google
+   * 
+   * all it does is get the name from the oauth2
+   * provider, create a jwt token with it, and store
+   * it as a cooike
+   * 
+   * @param request
+   * @param response
+   * @param authentication
+   * @throws java.io.IOException
+   *
+   */
   private void oauth2SuccessHandler(HttpServletRequest request,
       HttpServletResponse response,
       Authentication authentication) throws java.io.IOException {
     OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
     var attrs = token.getPrincipal().getAttributes();
 
-    // String email = (String) attrs.getOrDefault("email", "unknown@example.com");
     String name = (String) attrs.getOrDefault("name", token.getName());
 
     String jwt = jwtUtil.generate(name);
@@ -81,7 +100,9 @@ public class SecurityConfig {
     Cookie cookie = JwtCookieUtil.createJwtCookie(jwt, 3600);
     response.addCookie(cookie);
 
-    response.sendRedirect("/home");
+    // NOTE: maybe we can use it later?
+    //
+    // response.sendRedirect("/home");
   }
 
   @Bean

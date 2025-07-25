@@ -2,8 +2,6 @@ package com.karka_deh.controllers.auth;
 
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.Cookie;
@@ -20,12 +18,10 @@ import com.karka_deh.repos.UserRepo;
 @RequestMapping("/auth")
 public class Login {
 
-  private final AuthenticationManager authManager;
   private final JwtUtil jwtUtil;
   private final UserRepo userRepo;
 
-  public Login(AuthenticationManager authManager, JwtUtil jwtUtil, UserRepo userRepo) {
-    this.authManager = authManager;
+  public Login(JwtUtil jwtUtil, UserRepo userRepo) {
     this.jwtUtil = jwtUtil;
     this.userRepo = userRepo;
   }
@@ -33,11 +29,6 @@ public class Login {
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody AuthCred req, HttpServletResponse response) {
     try {
-      // Authentication auth = authManager.authenticate(
-      // new UsernamePasswordAuthenticationToken(req.getUsername(),
-      // req.getPassword()));
-
-      // UserDetails user = (UserDetails) auth.getPrincipal();
       if (!this.userRepo.existsByUsername(req.getUsername())) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no username"));
       }

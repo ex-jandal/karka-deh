@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.Claims;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -29,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
       HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
+    // get the jwt cookie, if not, get the `Authorization` header
     String jwt = JwtCookieUtil.getJwtFromCookie(request);
     if (jwt == null) {
       String authHeader = request.getHeader("Authorization");
@@ -40,9 +42,19 @@ public class JwtFilter extends OncePerRequestFilter {
     if (jwt != null) {
       try {
         Claims claims = jwtUtil.parse(jwt).getBody();
+
+        var expiration = claims.getExpiration();
+        if (expiration != null && expiration.before(new Date())) {
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          return;
+        }
+
         String username = claims.getSubject();
 
+        // store the user credentials, username is the only thing needed, because it's
+        // jwt, no need for password and roles
         var principal = new User(username, "", java.util.List.of());
+
         var authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
       } catch (JwtException e) {
@@ -57,6 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     String path = request.getRequestURI();
-    return path.equals("/auth/login") || path.startsWith("/oauth2") || path.equals("/auth/register");
+    // don't filter the login, it should create a new one, no filtering
+    return path.equals("/auth/login");
   }
 }
