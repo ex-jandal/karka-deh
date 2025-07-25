@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.karka_deh.jwt.JwtCookieUtil;
 import com.karka_deh.jwt.JwtUtil;
-import com.karka_deh.models.reqs.AuthCred;
+import com.karka_deh.models.requests.auth.SignupRequest;
 import com.karka_deh.repos.UserRepo;
 
 @RestController
@@ -27,21 +27,22 @@ public class Signup {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> signup(@RequestBody AuthCred req, HttpServletResponse response) {
+  public ResponseEntity<?> signup(@RequestBody SignupRequest req, HttpServletResponse response) {
     try {
       if (this.userRepo.existsByUsername(req.getUsername())) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(Map.of("error", "Username already taken"));
       }
 
-      this.userRepo.createUser(req.getUsername(),
+      var user = this.userRepo.createUser(req.getUsername(),
           req.getPassword());
 
       String token = jwtUtil.generate(req.getUsername());
       Cookie jwtCookie = JwtCookieUtil.createJwtCookie(token, 3600);
       response.addCookie(jwtCookie);
 
-      return ResponseEntity.ok(Map.of("message", "Signup successful"));
+      return ResponseEntity.ok(Map.of("message", "Signup successful", "id", user.getCreatedAt(), "username",
+          user.getUsername(), "created_at", user.getCreatedAt()));
 
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

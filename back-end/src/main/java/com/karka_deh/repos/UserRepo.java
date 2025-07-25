@@ -1,7 +1,7 @@
 
 package com.karka_deh.repos;
 
-import com.karka_deh.models.reqs.User;
+import com.karka_deh.models.entities.UserEntity;
 import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.TableElement;
 
@@ -17,10 +17,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository("userRepo")
-public class UserRepo extends BaseRepo<User> {
+public class UserRepo extends BaseRepo<UserEntity> {
 
   public UserRepo(JdbcTemplate jdbc) {
-    super(jdbc, User.class, "users");
+    super(jdbc, UserEntity.class, "users");
   }
 
   public boolean existsByUsername(String username) {
@@ -30,19 +30,27 @@ public class UserRepo extends BaseRepo<User> {
     return count == 1;
   }
 
-  public void createUser(String username, String passwordHash) {
+  public UserEntity createUser(String username, String passwordHash) {
     UUID uuid = UUID.randomUUID();
-    Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+    var localDateTime = LocalDateTime.now();
 
     String email = username + "@karka-deh.com";
 
     String sql = "INSERT INTO users (id, username, email, password_hash, created_at) VALUES (?, ?, ?, ?, ?)";
 
-    super.jdbc.update(sql, uuid.toString(), username, email, passwordHash, timestamp);
+    super.jdbc.update(sql, uuid.toString(), username, email, passwordHash, Timestamp.valueOf(localDateTime));
+
+    var entity = new UserEntity();
+    entity.setUsername(username);
+    entity.setId(uuid);
+    entity.setCreatedAt(localDateTime);
+
+    return entity;
+
   }
 
   @Override
-  protected PreparedStatement getInsertPreparedStatementSetter(Connection conn, String sql, User entity)
+  protected PreparedStatement getInsertPreparedStatementSetter(Connection conn, String sql, UserEntity entity)
       throws SQLException {
 
     Timestamp timestamp = entity.getCreatedAt() == null

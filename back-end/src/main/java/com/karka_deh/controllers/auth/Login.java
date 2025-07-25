@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.karka_deh.jwt.JwtCookieUtil;
 import com.karka_deh.jwt.JwtUtil;
-import com.karka_deh.models.reqs.AuthCred;
+import com.karka_deh.models.requests.auth.LoginRequest;
 import com.karka_deh.repos.UserRepo;
 
 @RestController
@@ -27,7 +27,7 @@ public class Login {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody AuthCred req, HttpServletResponse response) {
+  public ResponseEntity<?> login(@RequestBody LoginRequest req, HttpServletResponse response) {
     try {
       if (!this.userRepo.existsByUsername(req.getUsername())) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no username"));

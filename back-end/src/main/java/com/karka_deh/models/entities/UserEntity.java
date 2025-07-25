@@ -1,4 +1,4 @@
-package com.karka_deh.models.reqs;
+package com.karka_deh.models.entities;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
-public class User {
+public class UserEntity {
 
   @NotNull(message = "id is required")
   private UUID id;
@@ -19,9 +19,9 @@ public class User {
   @Size(min = 3, max = 64)
   private String username;
 
-  @NotNull(message = "email is required")
-  @Email(message = "email is invalid")
-  private String email;
+  // @NotNull(message = "email is required")
+  // @Email(message = "email is invalid")
+  // private String email;
 
   // TODO: create another class for the request that the user will give their
   // password in plain text, and another class to store it hashed.
