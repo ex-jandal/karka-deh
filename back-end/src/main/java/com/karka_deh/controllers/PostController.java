@@ -12,34 +12,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.karka_deh.models.requests.Post;
-import com.karka_deh.repos.PostRepo;
+import com.karka_deh.models.entities.PostEntity;
+import com.karka_deh.models.requests.PostRequest;
+import com.karka_deh.services.PostService;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
-  private final PostRepo postRepo;
+  private final PostService postService;
 
-  public PostController(PostRepo postRepo) {
-    this.postRepo = postRepo;
+  public PostController(PostService postService) {
+    this.postService = postService;
   }
 
   @GetMapping
-  public List<Post> listPosts() {
-    return this.postRepo.findAll();
+  public List<PostEntity> listPosts() {
+    return this.postService.findAll();
   }
 
   @GetMapping("/{title}")
-  public Optional<Post> getByTitle(@PathVariable String title) {
-    return this.postRepo.findByTitle(title);
+  public Optional<PostEntity> getByTitle(@PathVariable String title) {
+    return this.postService.findByTitle(title);
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@Valid @RequestBody Post post) {
-    System.out.println(post);
-    this.postRepo.save(post);
+  public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest post, Authentication auth) {
+    this.postService.createPost(post, auth.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 }

@@ -23,10 +23,6 @@ public class UserEntity {
   // @Email(message = "email is invalid")
   // private String email;
 
-  // TODO: create another class for the request that the user will give their
-  // password in plain text, and another class to store it hashed.
-  // Something like that
-
   @NotNull(message = "password_hash is required")
   @JsonAlias("password_hash")
   private String passwordHash;

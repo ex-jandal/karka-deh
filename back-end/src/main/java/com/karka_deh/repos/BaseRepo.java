@@ -108,8 +108,6 @@ public abstract class BaseRepo<T> {
         +
         " FROM " + this.tableName;
 
-    System.out.println(sql);
-
     return jdbc.query(sql, new BeanPropertyRowMapper<T>(entityClass));
   }
 

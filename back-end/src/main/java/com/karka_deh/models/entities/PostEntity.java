@@ -1,4 +1,4 @@
-package com.karka_deh.models.requests;
+package com.karka_deh.models.entities;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 
-public class Post {
+public class PostEntity {
   @NotNull(message = "id is required")
   private UUID id;
 
@@ -16,7 +16,6 @@ public class Post {
   @NotNull(message = "author_id is required")
   private UUID authorId;
 
-  // TODO: move it out like what's been done to users
   @JsonAlias("created_at")
   @Null
   private LocalDateTime createdAt;

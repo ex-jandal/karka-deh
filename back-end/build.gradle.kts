@@ -39,6 +39,10 @@ dependencies {
   // oracle db
   implementation("com.oracle.database.jdbc:ojdbc11:21.9.0.0")
 
+  // easy convert between classes
+  implementation ("org.mapstruct:mapstruct:1.6.3")
+  annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.3")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

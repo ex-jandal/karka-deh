@@ -1,9 +1,9 @@
 package com.karka_deh.repos;
 
-import com.karka_deh.models.requests.Post;
 import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
+import com.karka_deh.models.entities.PostEntity;
 
 import java.io.StringReader;
 import java.sql.Connection;
@@ -21,11 +21,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @DependsOn("userRepo")
-public class PostRepo extends BaseRepo<Post> {
+public class PostRepo extends BaseRepo<PostEntity> {
   private final JdbcTemplate jdbc;
 
   public PostRepo(JdbcTemplate jdbc) {
-    super(jdbc, Post.class, "posts");
+    super(jdbc, PostEntity.class, "posts");
     this.jdbc = jdbc;
   }
 
@@ -42,13 +42,13 @@ public class PostRepo extends BaseRepo<Post> {
 
   }
 
-  public Optional<Post> findByTitle(String title) {
+  public Optional<PostEntity> findByTitle(String title) {
     String sql = "SELECT * FROM posts WHERE title = ?";
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(Post.class), title).stream().findFirst();
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), title).stream().findFirst();
   }
 
   @Override
-  protected PreparedStatement getInsertPreparedStatementSetter(Connection conn, String sql, Post entity)
+  protected PreparedStatement getInsertPreparedStatementSetter(Connection conn, String sql, PostEntity entity)
       throws SQLException {
 
     Timestamp timestamp = entity.getCreatedAt() == null
