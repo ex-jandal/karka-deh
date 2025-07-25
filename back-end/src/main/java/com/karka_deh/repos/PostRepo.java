@@ -1,6 +1,6 @@
 package com.karka_deh.repos;
 
-import com.karka_deh.models.reqs.Post;
+import com.karka_deh.models.requests.Post;
 import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;

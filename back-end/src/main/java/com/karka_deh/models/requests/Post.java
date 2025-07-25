@@ -1,4 +1,4 @@
-package com.karka_deh.models.reqs;
+package com.karka_deh.models.requests;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +16,7 @@ public class Post {
   @NotNull(message = "author_id is required")
   private UUID authorId;
 
+  // TODO: move it out like what's been done to users
   @JsonAlias("created_at")
   @Null
   private LocalDateTime createdAt;

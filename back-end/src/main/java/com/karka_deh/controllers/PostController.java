@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.karka_deh.models.reqs.Post;
+import com.karka_deh.models.requests.Post;
 import com.karka_deh.repos.PostRepo;
 
 import jakarta.validation.Valid;

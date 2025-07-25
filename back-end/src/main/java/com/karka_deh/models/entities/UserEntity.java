@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
-import jakarta.validation.constraints.Email;
+// import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
@@ -51,14 +51,6 @@ public class UserEntity {
     this.username = username;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
   public String getPasswordHash() {
     return passwordHash;
   }
@@ -73,6 +65,13 @@ public class UserEntity {
 
   public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
+
+  }
+
+  @Override
+  public String toString() {
+    return "UserEntity{" + this.getId() + ", " + this.getUsername() + ", " + this.getPasswordHash() + ", "
+        + this.getCreatedAt().toString() + "}";
 
   }
 

@@ -2,6 +2,7 @@ package com.karka_deh.controllers.auth;
 
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.Cookie;
@@ -12,29 +13,27 @@ import java.util.Map;
 import com.karka_deh.jwt.JwtCookieUtil;
 import com.karka_deh.jwt.JwtUtil;
 import com.karka_deh.models.requests.auth.LoginRequest;
-import com.karka_deh.repos.UserRepo;
 
 @RestController
 @RequestMapping("/auth")
 public class Login {
 
   private final JwtUtil jwtUtil;
-  private final UserRepo userRepo;
+  private final AuthenticationManager authenticationManager;
 
-  public Login(JwtUtil jwtUtil, UserRepo userRepo) {
+  public Login(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
     this.jwtUtil = jwtUtil;
-    this.userRepo = userRepo;
+    this.authenticationManager = authenticationManager;
   }
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest req, HttpServletResponse response) {
     try {
-      if (!this.userRepo.existsByUsername(req.getUsername())) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no username"));
-      }
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
 
+      // if we’re here, that means authentication was successful
       String token = jwtUtil.generate(req.getUsername());
-
       Cookie jwtCookie = JwtCookieUtil.createJwtCookie(token, 3600);
       response.addCookie(jwtCookie);
 

@@ -1,4 +1,3 @@
-
 package com.karka_deh.config;
 
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import jakarta.servlet.http.Cookie;
 
 import com.karka_deh.jwt.JwtUtil;
+import com.karka_deh.repos.UserRepo;
+import com.karka_deh.services.UserService;
 import com.karka_deh.jwt.JwtFilter;
 import com.karka_deh.jwt.JwtCookieUtil;
 
@@ -110,12 +111,4 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails user = User.withUsername("abdullah")
-        .password(passwordEncoder().encode("secret123"))
-        .roles("USER")
-        .build();
-    return new InMemoryUserDetailsManager(user);
-  }
 }
