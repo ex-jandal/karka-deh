@@ -40,20 +40,20 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public List<CommentEntity> getAllPostCommentsByUser(UUID postId, String username) {
-    // select everything from comments and alias it to 'c'
-    // join users and alias it to 'u', and join them based on the author_id and id
-    // of the users
-    // now we get every comment where the post_id matches ouer, and with the same
-    // username
-    // because a user can comment multiple times
+  public List<CommentEntity> getAllPostCommentsByUser(String postId, String username) {
     String sql = """
+        -- select everything from comments and alias it to 'c'
         SELECT c.* FROM comments c
+
+        -- join users and alias it to 'u', and join them based on the author_id and id of the users
         JOIN users u ON c.author_id = u.id
+
+        -- now we get every comment where the post_id matches ouer, and with the same username
+        -- because a user can comment multiple times
         WHERE c.post_id = ? AND u.username = ?
         """;
 
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId.toString(), username);
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId, username);
   }
 
   @Override

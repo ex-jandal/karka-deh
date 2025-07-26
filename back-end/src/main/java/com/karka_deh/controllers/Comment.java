@@ -30,7 +30,7 @@ public class Comment {
 
   @GetMapping("/all/{post_id}")
   public List<CommentResponse> getAllPostComments(@PathVariable("post_id") String postId, Authentication auth) {
-    return this.commentService.getAllPostComments(UUID.fromString(postId), auth.getName());
+    return this.commentService.getAllPostComments(postId, auth.getName());
   }
 
   @PostMapping

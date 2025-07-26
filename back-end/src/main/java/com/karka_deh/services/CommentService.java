@@ -27,7 +27,7 @@ public class CommentService {
     this.commentMapper = commentMapper;
   }
 
-  public List<CommentResponse> getAllPostComments(UUID postId, String username) {
+  public List<CommentResponse> getAllPostComments(String postId, String username) {
     List<CommentResponse> comments = this.commentRepo.getAllPostCommentsByUser(postId, username).stream()
         .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
 
