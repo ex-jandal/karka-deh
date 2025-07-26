@@ -1,5 +1,8 @@
 package com.karka_deh.services;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +27,12 @@ public class UserService implements UserDetailsService {
     this.userRepo = userRepo;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
+  }
+
+  public Optional<UUID> getUserId(String username) {
+    return this.userRepo.findByUsername(username).map(user -> {
+      return user.getId();
+    });
   }
 
   public boolean existsByUsername(String username) {

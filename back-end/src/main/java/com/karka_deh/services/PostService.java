@@ -17,19 +17,19 @@ import com.karka_deh.repos.UserRepo;
 @Service
 public class PostService {
   private final PostRepo postRepo;
-  private final UserRepo userRepo;
+  private final UserService userService;
 
   @Autowired
   private final PostMapper postMapper;
 
-  public PostService(PostRepo postRepo, UserRepo userRepo, PostMapper postMapper) {
+  public PostService(PostRepo postRepo, UserService userService, PostMapper postMapper) {
     this.postRepo = postRepo;
-    this.userRepo = userRepo;
+    this.userService = userService;
     this.postMapper = postMapper;
   }
 
   public List<PostEntity> getAllUserPosts(String username) {
-    UUID user_id = this.getUserId(username).get();
+    UUID user_id = this.userService.getUserId(username).get();
 
     return this.postRepo.findAllPostsByUserId(user_id);
   }
@@ -38,15 +38,9 @@ public class PostService {
     return this.postRepo.findByTitle(title);
   }
 
-  private Optional<UUID> getUserId(String username) {
-    return this.userRepo.findByUsername(username).map(user -> {
-      return user.getId();
-    });
-  }
-
   public void createPost(PostRequest postRequest, String username) {
     var uuid = UUID.randomUUID();
-    var user_id = this.getUserId(username).get();
+    var user_id = this.userService.getUserId(username).get();
     var postEntity = this.postMapper.toPostEntity(postRequest);
 
     postEntity.setId(uuid);

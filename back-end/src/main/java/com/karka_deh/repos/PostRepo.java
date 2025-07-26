@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("postRepo")
 @DependsOn("userRepo")
 public class PostRepo extends BaseRepo<PostEntity> {
   private final JdbcTemplate jdbc;
