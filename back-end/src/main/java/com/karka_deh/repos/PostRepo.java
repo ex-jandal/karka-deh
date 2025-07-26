@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -45,6 +46,11 @@ public class PostRepo extends BaseRepo<PostEntity> {
   public Optional<PostEntity> findByTitle(String title) {
     String sql = "SELECT * FROM posts WHERE title = ?";
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), title).stream().findFirst();
+  }
+
+  public List<PostEntity> findAllPostsByUserId(UUID id) {
+    String sql = "SELECT * FROM posts WHERE author_id = ?";
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id.toString());
   }
 
   @Override

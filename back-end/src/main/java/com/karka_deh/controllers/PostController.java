@@ -28,14 +28,15 @@ public class PostController {
     this.postService = postService;
   }
 
-  @GetMapping
-  public List<PostEntity> listPosts() {
-    return this.postService.findAll();
-  }
-
+  // TODO: check if user owns it
   @GetMapping("/{title}")
   public Optional<PostEntity> getByTitle(@PathVariable String title) {
     return this.postService.findByTitle(title);
+  }
+
+  @GetMapping("/all")
+  public List<PostEntity> getAllUserPosts(Authentication auth) {
+    return this.postService.getAllUserPosts(auth.getName());
   }
 
   @PostMapping

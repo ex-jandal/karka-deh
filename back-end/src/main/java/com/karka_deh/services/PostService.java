@@ -28,8 +28,10 @@ public class PostService {
     this.postMapper = postMapper;
   }
 
-  public List<PostEntity> findAll() {
-    return this.postRepo.findAll();
+  public List<PostEntity> getAllUserPosts(String username) {
+    UUID user_id = this.getUserId(username).get();
+
+    return this.postRepo.findAllPostsByUserId(user_id);
   }
 
   public Optional<PostEntity> findByTitle(String title) {
