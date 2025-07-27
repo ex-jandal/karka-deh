@@ -11,7 +11,7 @@ public class JwtCookieUtil {
     cookie.setHttpOnly(true);
     cookie.setPath("/");
     cookie.setMaxAge(maxAgeSeconds);
-    cookie.setSecure(false); // set to true if you run HTTPS
+    cookie.setSecure(false); // https
     // TODO: look for it
     //
     // cookie.setSameSite("Strict"); // to prevent CSRF, adjust if needed

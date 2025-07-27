@@ -4,6 +4,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -42,6 +43,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             // allow these urls for everyone
             .requestMatchers("/", "/auth/**", "/login.html", "/oauth2/**").permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
             // the rest are for authenticated users only, that's what the JwtFilter job is
             .anyRequest().authenticated())
