@@ -1,12 +1,12 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
-document.documentElement.lang = 'ar'
-document.documentElement.dir = 'rtl'
+document.documentElement.lang='ar'
+document.documentElement.dir='rtl'
 </script>
 
 <template>
   <Navbar />
-  <div class="main flex flex-col justify-center items-center">
+  <div class="main ">
     <router-view class=""></router-view>
   </div>
 </template>

@@ -1,3 +1,6 @@
+<script setup>
+import LoginScreen from '../components/LoginScreen.vue';
+</script>
 <script>
 export default {
   data() {
@@ -12,12 +15,11 @@ export default {
         'shadow-xl',
         'mr-2',
         'w-14',
-        'mt-2',
-        'mb-2',
+        'my-2',
         'rounded-4xl',
         'hover:rounded-xl',
         'hover:scale-105',
-        ' transition-all',
+        'transition-all',
       ],
       iconContext: [
         'iconContext',
@@ -32,37 +34,59 @@ export default {
         'duration-100',
         'absolute',
       ],
+      loginVisiable: ['hidden', 'transition-all'],
+    }
+  },
+  methods: {
+    loginShow() {
+      this.loginVisiable[0]=='hidden'? this.loginVisiable[0]='block':this.loginVisiable[0]='hidden'
     }
   },
 }
 </script>
 
 <template>
-  <nav
-    class="fixed top-0 right-0 pr-2 flex-row m-2 flex justify-between items-center gap-2 h-20 overflow-hidden"
-  >
+  <nav class="fixed top-0 right-0 pr-2 flex-row m-2 flex justify-between items-center gap-2 h-20 overflow-hidden">
     <div class="right-side shadow-sm flex flex-row pr-5 pl-4">
-      <router-link to="/" class="flex flex-row justify-center items-center">
+      <router-link
+        to="/"
+        class="flex flex-row justify-center items-center"
+      >
         <div class="nav-logo ml-2">
-          <img class="ml-2" src="../assets/logo.png" alt="logo" width="45px" />
+          <img
+            class="ml-2"
+            src="../assets/logo.png"
+            alt="logo"
+            width="45px"
+          />
         </div>
       </router-link>
-      <router-link :class="barIcons" to="">
-        <font-awesome-icon :icon="['fas', 'lines-leaning']" /><span :class="iconContext"
-          >مقالات</span
-        >
+      <router-link
+        :class="barIcons"
+        to="/articleFeeds"
+      >
+        <font-awesome-icon :icon="['fas', 'lines-leaning']" /><span :class="iconContext">مقالات</span>
       </router-link>
-      <router-link :class="barIcons" to="">
+      <router-link
+        :class="barIcons"
+        to="/ff"
+      >
         <font-awesome-icon :icon="['fas', 'newspaper']" /><span :class="iconContext">أخبار</span>
       </router-link>
     </div>
 
-    <router-link to="" class="user-info relative">
-      <div class="left-side shadow-sm flex flex-row justify-center items-center m-2 h-16 w-25">
+    <button
+      @click="loginShow"
+      class="login user-info relative"
+    >
+      <div class="left-side transition-all shadow-sm flex flex-row justify-center gap-3 items-center
+        m-2 h-16 w-20 sm:w-40">
         <font-awesome-icon :icon="['fas', 'user']" />
+        <span class="hidden sm:inline">سجل الدخول</span>
       </div>
-    </router-link>
+    </button>
   </nav>
+  <LoginScreen :class="loginVisiable" />
 </template>
 <style>
 nav {
@@ -80,6 +104,11 @@ nav {
   color: var(--forth-color);
 }
 
+.barIcons.router-link-exact-active {
+  color: var(--main-color);
+  background-color: var(--therd-color);
+}
+
 .barIcons:hover {
   background-color: var(--forth-color);
   color: var(--second-color);
@@ -90,5 +119,10 @@ nav {
   color: var(--forth-color);
   border-radius: 50px;
   /* height: 120%; */
+}
+.left-side:hover {
+  background-color: var(--forth-color);
+  color: var(--therd-color);
+  border-radius: 20px;
 }
 </style>
