@@ -4,6 +4,7 @@ import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.PostEntity;
+import com.karka_deh.models.repo_find.Posts;
 
 import java.io.StringReader;
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,18 +65,39 @@ public class PostRepo extends BaseRepo<PostEntity> {
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id, size, offset);
   }
 
-  public List<PostEntity> searchPosts(String keyword, int page, int size) {
+  public Posts searchPosts(String keyword, int page, int size) {
     int offset = size * page;
 
     String sql = """
-          SELECT * FROM posts
+          SELECT *, COUNT(*) OVER() AS total_count
+          FROM posts
           WHERE LOWER(title) LIKE ? OR LOWER(content) LIKE ?
           ORDER BY created_at DESC
           LIMIT ? OFFSET ?
-
         """;
 
-    return List.of();
+    String likeQuery = "%" + keyword.toLowerCase() + "%";
+
+    return this.jdbc.query(sql, rs -> {
+      var posts = new ArrayList<PostEntity>();
+
+      int totalCount = 0;
+      var mapper = new BeanPropertyRowMapper<>(PostEntity.class);
+
+      while (rs.next()) {
+        // get every row except the last one, the `total_count`
+        PostEntity post = mapper.mapRow(rs, rs.getRow() - 1);
+        posts.add(post);
+
+        if (totalCount == 0) {
+          totalCount = rs.getInt("total_count");
+        }
+      }
+
+      return new Posts(totalCount, posts);
+
+    }, likeQuery, likeQuery, size, offset);
+
   }
 
   public int countPostsByUserId(UUID userId) {

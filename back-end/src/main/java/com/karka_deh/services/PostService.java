@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.mappers.PostMapper;
+import com.karka_deh.models.repo_find.Posts;
 import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.repos.PostRepo;
@@ -47,6 +48,21 @@ public class PostService {
         .toList();
 
     return new PageImpl<>(responses, pageable, total);
+  }
+
+  public Page<PostResponse> searchPost(String username, String keyword, Pageable pageable) {
+    int page = pageable.getPageNumber();
+    int size = pageable.getPageSize();
+
+    Posts posts = this.postRepo.searchPosts(keyword, page, size);
+
+    int total = posts.getCount();
+
+    List<PostResponse> responses = posts.getPostEntities().stream().map(this.postMapper::toPostResponse)
+        .toList();
+
+    return new PageImpl<>(responses, pageable, total);
+
   }
 
   public Optional<PostResponse> findBySlug(String title) {
