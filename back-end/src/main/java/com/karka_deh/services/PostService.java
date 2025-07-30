@@ -1,5 +1,6 @@
 package com.karka_deh.services;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,10 @@ public class PostService {
     });
   }
 
-  public void createPost(PostRequest postRequest, String username) {
+  public boolean createPost(PostRequest postRequest, String username) {
+    if (this.findBySlug(postRequest.getTitle()).isPresent()) {
+      return false;
+    }
     var uuid = UUID.randomUUID();
     var user_id = this.userService.getUserId(username).get();
     var postEntity = this.postMapper.toPostEntity(postRequest);
@@ -79,8 +83,30 @@ public class PostService {
     postEntity.setId(uuid);
     postEntity.setAuthorId(user_id);
     postEntity.setCreatedAt(LocalDateTime.now());
+    postEntity.setSlug(slugify(postRequest.getTitle()));
 
     this.postRepo.save(postEntity);
+
+    return true;
+  }
+
+  private static String slugify(String input) {
+    if (input == null || input.isBlank())
+      return "";
+
+    // remove accents like é → e
+    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
+        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+    String lower = normalized.toLowerCase();
+
+    // replace all non-alphanumeric with hyphens
+    String hyphenated = lower.replaceAll("[^a-z0-9]+", "-");
+
+    // remove leading/trailing hyphens
+    String cleaned = hyphenated.replaceAll("^-+|-+$", "");
+
+    return cleaned;
   }
 
 }

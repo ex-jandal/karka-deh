@@ -29,6 +29,14 @@ public class PostEntity {
   @NotNull(message = "slug is required")
   private String slug;
 
+  public String getSlug() {
+    return slug;
+  }
+
+  public void setSlug(String slug) {
+    this.slug = slug;
+  }
+
   public void setId(UUID id) {
     this.id = id;
   }

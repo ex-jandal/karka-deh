@@ -38,6 +38,8 @@ public class PostRepo extends BaseRepo<PostEntity> {
         new Column("id", "UUID", "PRIMARY KEY", "DEFAULT", "gen_random_uuid()"),
         new Column("author_id", "UUID", "NOT NULL"),
         new Column("title", "VARCHAR(255)", "NOT NULL"),
+        // it's unique becuase it's going to be in the url
+        new Column("slug", "VARCHAR(255)", "NOT NULL", "UNIQUE"),
         new Column("content", "TEXT", "NOT NULL"),
         new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
         new StandaloneConstraint("CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id)"));
@@ -118,8 +120,9 @@ public class PostRepo extends BaseRepo<PostEntity> {
     ps.setObject(1, entity.getId(), java.sql.Types.OTHER);
     ps.setObject(2, entity.getAuthorId(), java.sql.Types.OTHER);
     ps.setString(3, entity.getTitle());
-    ps.setString(4, entity.getContent());
-    ps.setTimestamp(5, timestamp);
+    ps.setString(4, entity.getSlug());
+    ps.setString(5, entity.getContent());
+    ps.setTimestamp(6, timestamp);
     return ps;
   }
 

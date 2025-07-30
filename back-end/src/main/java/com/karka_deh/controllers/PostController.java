@@ -84,7 +84,11 @@ public class PostController {
 
   @PostMapping
   public ResponseEntity<Void> createPost(@Valid @RequestBody PostRequest post, Authentication auth) {
-    this.postService.createPost(post, auth.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    if (this.postService.createPost(post, auth.getName())) {
+
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    } else {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
   }
 }
