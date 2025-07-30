@@ -49,15 +49,25 @@ public class PostController {
    *
    */
   @GetMapping("/me")
-  public Page<PostResponse> getAllUserPosts(Pageable pageable, Authentication auth) {
-    return this.postService.getAllUserPosts(auth.getName(), pageable);
+  public ResponseEntity<Page<PostResponse>> getAllUserPosts(Pageable pageable, Authentication auth) {
+    var posts = this.postService.getAllUserPosts(auth.getName(), pageable);
+
+    return ResponseEntity.ok(posts);
   }
 
   @GetMapping("/search")
-  public Page<PostResponse> searchPosts(@RequestParam("q") String keyword, Pageable pageable,
+  public ResponseEntity<Page<PostResponse>> searchPosts(@RequestParam("q") String keyword, Pageable pageable,
       Authentication auth) {
 
-    return this.postService.searchPost(auth.getName(), keyword, pageable);
+    var trimmedKeyword = keyword == null ? "" : keyword.trim();
+
+    if (trimmedKeyword.isEmpty()) {
+      return ResponseEntity.badRequest().body(Page.empty());
+    }
+
+    var posts = this.postService.searchPost(auth.getName(), keyword, pageable);
+
+    return ResponseEntity.ok(posts);
   }
 
   // @PutMapping("/{id}")
