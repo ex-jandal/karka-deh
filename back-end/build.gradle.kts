@@ -36,8 +36,8 @@ dependencies {
   // .env loader
   implementation ("io.github.cdimascio:dotenv-java:3.0.0")
 
-  // oracle db
-  implementation("com.oracle.database.jdbc:ojdbc11:21.9.0.0")
+  // postgresql
+  implementation ("org.postgresql:postgresql:42.7.2")
 
   // easy convert between classes
   implementation ("org.mapstruct:mapstruct:1.6.3")

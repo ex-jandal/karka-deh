@@ -51,12 +51,12 @@ public abstract class BaseRepo<T> {
       throws SQLException;
 
   private void ensureTableExists() {
-    // oracle store the table names in uppercase, weird!
-    String checkSql = "SELECT COUNT(*) FROM user_tables WHERE table_name = '" + this.tableName.toUpperCase() + "'";
+    String checkSql = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = ? AND table_schema = current_schema()";
 
     Integer count = this.jdbc.queryForObject(
         checkSql,
-        Integer.class);
+        Integer.class,
+        this.tableName.toLowerCase());
 
     if (count != null && count == 0) {
 
@@ -103,7 +103,6 @@ public abstract class BaseRepo<T> {
             .map(TableElement::filedName)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .map(key -> String.format("%s AS \"%s\"", key, key)) // quoting for oracle
             .collect(Collectors.joining(", "))
         +
         " FROM " + this.tableName;

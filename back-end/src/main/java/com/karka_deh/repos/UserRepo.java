@@ -45,11 +45,11 @@ public class UserRepo extends BaseRepo<UserEntity> {
   @Override
   protected List<TableElement> getTableStructure() {
     return List.of(
-        new Column("id", "VARCHAR2(36)", "NOT", "NULL", "PRIMARY", "KEY"),
-        new Column("username", "VARCHAR2(64)", "UNIQUE", "NOT", "NULL"),
-        // new Column("email", "VARCHAR2(128)", "UNIQUE", "NOT", "NULL"),
-        new Column("password_hash", "VARCHAR2(255)", "NOT", "NULL"),
-        new Column("created_at", "TIMESTAMP", "DEFAULT", "CURRENT_TIMESTAMP"));
+        new Column("id", "UUID", "PRIMARY KEY", "DEFAULT", "gen_random_uuid()"),
+        new Column("username", "VARCHAR(64)", "UNIQUE", "NOT NULL"),
+        // new Column("email", "VARCHAR(128)", "UNIQUE", "NOT NULL"),
+        new Column("password_hash", "VARCHAR(255)", "NOT NULL"),
+        new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"));
   }
 
   public boolean existsByUsername(String username) {

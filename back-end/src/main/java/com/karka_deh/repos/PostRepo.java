@@ -34,11 +34,11 @@ public class PostRepo extends BaseRepo<PostEntity> {
   protected List<TableElement> getTableStructure() {
 
     return List.of(
-        new Column("id", "VARCHAR2(36)", "NOT", "NULL", "PRIMARY", "KEY"),
-        new Column("author_id", "VARCHAR2(36)", "NOT", "NULL"),
-        new Column("title", "VARCHAR2(255)", "NOT", "NULL"),
-        new Column("content", "CLOB", "NOT", "NULL"),
-        new Column("created_at", "TIMESTAMP", "DEFAULT", "CURRENT_TIMESTAMP"),
+        new Column("id", "UUID", "PRIMARY KEY", "DEFAULT", "gen_random_uuid()"),
+        new Column("author_id", "UUID", "NOT NULL"),
+        new Column("title", "VARCHAR(255)", "NOT NULL"),
+        new Column("content", "TEXT", "NOT NULL"),
+        new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
         new StandaloneConstraint("CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id)"));
 
   }

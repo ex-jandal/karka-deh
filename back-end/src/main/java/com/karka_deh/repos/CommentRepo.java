@@ -30,11 +30,11 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
   @Override
   protected List<TableElement> getTableStructure() {
     return List.of(
-        new Column("id", "VARCHAR2(36)", "NOT", "NULL", "PRIMARY", "KEY"),
-        new Column("post_id", "VARCHAR2(36)", "NOT", "NULL"),
-        new Column("author_id", "VARCHAR2(36)", "NOT", "NULL"),
-        new Column("content", "CLOB", "NOT", "NULL"),
-        new Column("created_at", "TIMESTAMP", "DEFAULT", "CURRENT_TIMESTAMP"),
+        new Column("id", "UUID", "PRIMARY KEY", "DEFAULT", "gen_random_uuid()"),
+        new Column("post_id", "UUID", "NOT NULL"),
+        new Column("author_id", "UUID", "NOT NULL"),
+        new Column("content", "TEXT", "NOT NULL"),
+        new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
         new StandaloneConstraint("CONSTRAINT fk_comment_post_post FOREIGN KEY (post_id) REFERENCES posts(id)"),
         new StandaloneConstraint("CONSTRAINT fk_comment_author_users FOREIGN KEY (author_id) REFERENCES users(id)"));
 
