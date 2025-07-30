@@ -24,6 +24,9 @@ dependencies {
 
   implementation ("org.springframework.boot:spring-boot-starter-validation")
 
+  // Page<T>
+  implementation("org.springframework.data:spring-data-commons:3.5.2")
+
   // oauth
   implementation ("org.springframework.boot:spring-boot-starter-security")
   implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")

@@ -1,21 +1,13 @@
-package com.karka_deh.models.entities;
+package com.karka_deh.models.responses;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 
-public class PostEntity {
-  @NotNull(message = "id is required")
-  private UUID id;
-
-  @JsonAlias("author_id")
-  @NotNull(message = "author_id is required")
-  private UUID authorId;
-
+public class PostResponse {
   @JsonAlias("created_at")
   @Null
   private LocalDateTime createdAt;
@@ -29,12 +21,12 @@ public class PostEntity {
   @NotNull(message = "slug is required")
   private String slug;
 
-  public void setId(UUID id) {
-    this.id = id;
+  public String getSlug() {
+    return slug;
   }
 
-  public void setAuthorId(UUID authorId) {
-    this.authorId = authorId;
+  public void setSlug(String slug) {
+    this.slug = slug;
   }
 
   public void setCreatedAt(LocalDateTime createdAt) {
@@ -51,21 +43,11 @@ public class PostEntity {
 
   @Override
   public String toString() {
-    return "Post{" +
-        "id='" + this.id + '\'' +
-        ", authorId='" + this.authorId + '\'' +
+    return "PostResponse{" +
         ", title='" + this.title + '\'' +
         ", content='" + this.content + '\'' +
         ", createdAt=" + this.createdAt +
         '}';
-  }
-
-  public UUID getAuthorId() {
-    return authorId;
-  }
-
-  public UUID getId() {
-    return this.id;
   }
 
   public String getTitle() {

@@ -7,10 +7,14 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.mappers.PostMapper;
 import com.karka_deh.models.requests.PostRequest;
+import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.repos.PostRepo;
 import com.karka_deh.repos.UserRepo;
 
@@ -28,14 +32,27 @@ public class PostService {
     this.postMapper = postMapper;
   }
 
-  public List<PostEntity> getAllUserPosts(String username) {
-    UUID user_id = this.userService.getUserId(username).get();
+  public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
+    // should not happen but handle it anyway
+    UUID userId = this.userService.getUserId(username).get();
 
-    return this.postRepo.findAllPostsByUserId(user_id);
+    int page = pageable.getPageNumber();
+    int size = pageable.getPageSize();
+
+    List<PostEntity> entities = this.postRepo.findAllPostsByUserId(userId, page, size);
+    int total = this.postRepo.countPostsByUserId(userId);
+
+    List<PostResponse> responses = entities.stream()
+        .map(this.postMapper::toPostResponse)
+        .toList();
+
+    return new PageImpl<>(responses, pageable, total);
   }
 
-  public Optional<PostEntity> findByTitle(String title) {
-    return this.postRepo.findByTitle(title);
+  public Optional<PostResponse> findBySlug(String title) {
+    return this.postRepo.findBySlug(title).map(entity -> {
+      return this.postMapper.toPostResponse(entity);
+    });
   }
 
   public void createPost(PostRequest postRequest, String username) {

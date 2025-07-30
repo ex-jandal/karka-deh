@@ -32,7 +32,6 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   @Override
   protected List<TableElement> getTableStructure() {
-
     return List.of(
         new Column("id", "UUID", "PRIMARY KEY", "DEFAULT", "gen_random_uuid()"),
         new Column("author_id", "UUID", "NOT NULL"),
@@ -43,14 +42,45 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   }
 
-  public Optional<PostEntity> findByTitle(String title) {
-    String sql = "SELECT * FROM posts WHERE title = ?";
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), title).stream().findFirst();
+  public Optional<PostEntity> findBySlug(String slug) {
+    String sql = "SELECT * FROM posts WHERE slug = ?";
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), slug).stream().findFirst();
   }
 
   public List<PostEntity> findAllPostsByUserId(UUID id) {
     String sql = "SELECT * FROM posts WHERE author_id = ?";
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id);
+  }
+
+  public List<PostEntity> findAllPostsByUserId(UUID id, int page, int size) {
+    int offset = size * page;
+
+    String sql = """
+        SELECT * FROM posts WHERE author_id = ?
+        ORDER BY created_at
+        LIMIT ? OFFSET ?
+        """;
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id.toString(), size, offset);
+  }
+
+  public List<PostEntity> searchPosts(String keyword, int page, int size) {
+    int offset = size * page;
+
+    String sql = """
+          SELECT * FROM posts
+          WHERE LOWER(title) LIKE ? OR LOWER(content) LIKE ?
+          ORDER BY created_at DESC
+          LIMIT ? OFFSET ?
+
+        """;
+
+    return List.of();
+  }
+
+  public int countPostsByUserId(UUID userId) {
+    String sql = "SELECT COUNT(*) FROM posts WHERE author_id = ?";
+    Integer total = jdbc.queryForObject(sql, Integer.class, userId.toString());
+    return total != null ? total : 0;
   }
 
   @Override
