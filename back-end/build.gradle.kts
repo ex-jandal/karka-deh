@@ -44,7 +44,8 @@ dependencies {
 
 
   // openapi
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+
 
   // easy convert between classes
   implementation ("org.mapstruct:mapstruct:1.6.3")

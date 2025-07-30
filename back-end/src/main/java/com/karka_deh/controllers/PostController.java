@@ -23,11 +23,13 @@ import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.services.PostService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/posts")
+@SecurityRequirement(name = "bearerAuth")
 public class PostController {
   private final PostService postService;
 

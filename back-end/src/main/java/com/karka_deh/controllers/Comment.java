@@ -17,10 +17,12 @@ import com.karka_deh.models.requests.CommentRequest;
 import com.karka_deh.models.responses.CommentResponse;
 import com.karka_deh.services.CommentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RequestMapping("/comments")
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 public class Comment {
   private final CommentService commentService;
 
