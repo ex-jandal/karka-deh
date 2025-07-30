@@ -27,7 +27,7 @@ public class CommentService {
     this.commentMapper = commentMapper;
   }
 
-  public List<CommentResponse> getAllPostComments(String postId, String username) {
+  public List<CommentResponse> getAllPostComments(UUID postId, String username) {
     List<CommentResponse> comments = this.commentRepo.getAllPostCommentsByUser(postId, username).stream()
         .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
 
@@ -41,8 +41,8 @@ public class CommentService {
 
     CommentEntity commentEntity = this.commentMapper.toCommentEntity(commentRequest);
 
-    commentEntity.setId(id.toString());
-    commentEntity.setAuthorId(user_id.toString());
+    commentEntity.setId(id);
+    commentEntity.setAuthorId(user_id);
 
     this.commentRepo.save(commentEntity);
   }

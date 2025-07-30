@@ -9,15 +9,15 @@ import jakarta.validation.constraints.NotNull;
 
 public class CommentEntity {
   @NotNull(message = "id is required")
-  String id;
+  UUID id;
 
   @NotNull(message = "post_id is required")
   @JsonAlias("post_id")
-  String postId;
+  UUID postId;
 
   @NotNull(message = "author_id is required")
   @JsonAlias("author_id")
-  String authorId;
+  UUID authorId;
 
   @NotNull(message = "content is required")
   String content;
@@ -41,27 +41,27 @@ public class CommentEntity {
     this.content = content;
   }
 
-  public String getAuthorId() {
+  public UUID getAuthorId() {
     return authorId;
   }
 
-  public void setAuthorId(String authorId) {
+  public void setAuthorId(UUID authorId) {
     this.authorId = authorId;
   }
 
-  public String getPostId() {
+  public UUID getPostId() {
     return postId;
   }
 
-  public void setPostId(String postId) {
+  public void setPostId(UUID postId) {
     this.postId = postId;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

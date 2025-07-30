@@ -50,7 +50,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   public List<PostEntity> findAllPostsByUserId(UUID id) {
     String sql = "SELECT * FROM posts WHERE author_id = ?";
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id.toString());
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id);
   }
 
   @Override
@@ -62,10 +62,10 @@ public class PostRepo extends BaseRepo<PostEntity> {
         : Timestamp.valueOf(entity.getCreatedAt());
 
     PreparedStatement ps = conn.prepareStatement(sql);
-    ps.setString(1, entity.getId().toString());
-    ps.setString(2, entity.getAuthorId().toString());
+    ps.setObject(1, entity.getId(), java.sql.Types.OTHER);
+    ps.setObject(2, entity.getAuthorId(), java.sql.Types.OTHER);
     ps.setString(3, entity.getTitle());
-    ps.setCharacterStream(4, new StringReader(entity.getContent()), entity.getContent().length());
+    ps.setString(4, entity.getContent());
     ps.setTimestamp(5, timestamp);
     return ps;
   }

@@ -34,7 +34,7 @@ public class UserRepo extends BaseRepo<UserEntity> {
         : Timestamp.valueOf(entity.getCreatedAt());
 
     PreparedStatement ps = conn.prepareStatement(sql);
-    ps.setString(1, entity.getId().toString());
+    ps.setObject(1, entity.getId(), java.sql.Types.OTHER);
     ps.setString(2, entity.getUsername());
     // ps.setString(3, entity.getEmail());
     ps.setString(4, entity.getPasswordHash());
@@ -75,7 +75,7 @@ public class UserRepo extends BaseRepo<UserEntity> {
     // created_at) VALUES (?, ?, ?, ?, ?)";
     String sql = "INSERT INTO users (id, username, password_hash, created_at) VALUES (?, ?, ?, ?)";
 
-    super.jdbc.update(sql, uuid.toString(), username, passwordHash, Timestamp.valueOf(localDateTime));
+    super.jdbc.update(sql, uuid, username, passwordHash, Timestamp.valueOf(localDateTime));
 
     var entity = new UserEntity();
     entity.setUsername(username);

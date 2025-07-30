@@ -136,6 +136,7 @@ public abstract class BaseRepo<T> {
 
     String sql = sqlBuilder.toString();
     System.out.println(sql);
+    System.out.println(entity);
 
     this.jdbc.update(conn -> this.getInsertPreparedStatementSetter(conn, sql, entity));
   }

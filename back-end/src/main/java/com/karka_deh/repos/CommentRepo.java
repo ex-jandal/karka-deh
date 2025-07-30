@@ -40,7 +40,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public List<CommentEntity> getAllPostCommentsByUser(String postId, String username) {
+  public List<CommentEntity> getAllPostCommentsByUser(UUID postId, String username) {
     String sql = """
         -- select everything from comments and alias it to 'c'
         SELECT c.* FROM comments c
@@ -63,10 +63,10 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
     Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
 
     PreparedStatement ps = conn.prepareStatement(sql);
-    ps.setString(1, entity.getId().toString());
-    ps.setString(2, entity.getPostId());
-    ps.setString(3, entity.getAuthorId());
-    ps.setCharacterStream(4, new StringReader(entity.getContent()), entity.getContent().length());
+    ps.setObject(1, entity.getId(), java.sql.Types.OTHER);
+    ps.setObject(2, entity.getPostId(), java.sql.Types.OTHER);
+    ps.setObject(3, entity.getAuthorId(), java.sql.Types.OTHER);
+    ps.setString(4, entity.getContent());
     ps.setTimestamp(5, timestamp);
 
     return ps;
