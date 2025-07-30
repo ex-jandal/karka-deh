@@ -53,10 +53,11 @@ public class PostController {
     return this.postService.getAllUserPosts(auth.getName(), pageable);
   }
 
-  @GetMapping("/search")
-  public ResponseEntity<PostResponse> searchPosts(@RequestParam("q") String keyword, Pageable pageable) {
-
-  }
+  // @GetMapping("/search")
+  // public ResponseEntity<PostResponse> searchPosts(@RequestParam("q") String
+  // keyword, Pageable pageable) {
+  //
+  // }
 
   // @PutMapping("/{id}")
   // public ResponseEntity<Void> updatePost(@Valid @RequestBody PostRequest post,

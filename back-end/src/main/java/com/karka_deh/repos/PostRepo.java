@@ -60,7 +60,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
         ORDER BY created_at
         LIMIT ? OFFSET ?
         """;
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id.toString(), size, offset);
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id, size, offset);
   }
 
   public List<PostEntity> searchPosts(String keyword, int page, int size) {
@@ -79,7 +79,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   public int countPostsByUserId(UUID userId) {
     String sql = "SELECT COUNT(*) FROM posts WHERE author_id = ?";
-    Integer total = jdbc.queryForObject(sql, Integer.class, userId.toString());
+    Integer total = jdbc.queryForObject(sql, Integer.class, userId);
     return total != null ? total : 0;
   }
 
