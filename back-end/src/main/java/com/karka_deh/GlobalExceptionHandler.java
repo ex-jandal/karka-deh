@@ -4,6 +4,8 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import com.karka_deh.errors.*;
+
 import java.util.*;
 
 @RestControllerAdvice
@@ -35,6 +37,20 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
   }
 
+  //
+  // custom errors
+  //
+  @ExceptionHandler(SlugAlreadExistsException.class)
+  public ResponseEntity<?> handleSlugAlreadyExists(Exception ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(Map.of("error", ex.getMessage()));
+  }
+
   // catch-all fallback
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
@@ -46,4 +62,5 @@ public class GlobalExceptionHandler {
 
     return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
   }
+
 }

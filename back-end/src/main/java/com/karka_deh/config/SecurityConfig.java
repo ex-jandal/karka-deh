@@ -42,7 +42,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             // allow these urls for everyone
-            .requestMatchers("/", "/auth/**", "/login.html", "/oauth2/**").permitAll()
+            .requestMatchers("/", "/swagger-ui/**", "/auth/**", "/login.html", "/oauth2/**").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
             // the rest are for authenticated users only, that's what the JwtFilter job is

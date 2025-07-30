@@ -82,13 +82,15 @@ public class PostController {
   // Authentication auth) {
   // }
 
+  // @Operation(summary = "Create a post", responses = {
+  // @ApiResponse(responseCode = "201", description = "Created"),
+  // @ApiResponse(responseCode = "400", description = "Invalid post data"),
+  // @ApiResponse(responseCode = "409", description = "Slug already exists"),
+  // @ApiResponse(responseCode = "500", description = "Server error")
+  // })
   @PostMapping
   public ResponseEntity<Void> createPost(@Valid @RequestBody PostRequest post, Authentication auth) {
-    if (this.postService.createPost(post, auth.getName())) {
-
-      return ResponseEntity.status(HttpStatus.CREATED).build();
-    } else {
-      return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    }
+    this.postService.createPost(post, auth.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 }

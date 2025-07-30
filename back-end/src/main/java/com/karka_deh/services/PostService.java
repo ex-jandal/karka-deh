@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import com.karka_deh.errors.SlugAlreadExistsException;
+import com.karka_deh.errors.UserNotFoundException;
 import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.mappers.PostMapper;
 import com.karka_deh.models.repo_find.Posts;
@@ -72,12 +74,15 @@ public class PostService {
     });
   }
 
-  public boolean createPost(PostRequest postRequest, String username) {
-    if (this.findBySlug(postRequest.getTitle()).isPresent()) {
-      return false;
+  public void createPost(PostRequest postRequest, String username) {
+    var slug = PostService.slugify(postRequest.getTitle());
+
+    if (this.postRepo.findBySlug(slug).isPresent()) {
+      throw new SlugAlreadExistsException(slug);
     }
+
     var uuid = UUID.randomUUID();
-    var user_id = this.userService.getUserId(username).get();
+    var user_id = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
     var postEntity = this.postMapper.toPostEntity(postRequest);
 
     postEntity.setId(uuid);
@@ -87,7 +92,6 @@ public class PostService {
 
     this.postRepo.save(postEntity);
 
-    return true;
   }
 
   private static String slugify(String input) {
