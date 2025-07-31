@@ -4,6 +4,7 @@ export default {
     return {
       loginUsername: '',
       loginPassword: '',
+      loginMessage: '',
     }
   },
   methods: {
@@ -23,11 +24,11 @@ export default {
         this.$cookies.set('token', loginData.token, '1d')
         this.$cookies.set('loginUsername', this.loginUsername, '1d')
         this.$router.push('/articleFeeds');
-        alert('You are logged in');
+        this.loginMessage = 'Logged in successfuly';
         window.location.reload();
 
       } else {
-        alert('Login failed');
+        this.loginMessage = 'Wrong username or Password';
       }
     }
   },
@@ -36,10 +37,10 @@ export default {
 </script>
 
 <template>
-    <div class="login-section pb-[25px] h-screen w-screen sm:w-120 sm:h-160 flex flex-col
+    <div class="login-section h-screen w-screen sm:w-120 sm:h-190 flex flex-col
       justify-center items-center sm:rounded-4xl">
       <font-awesome-icon class="text-5xl grow" :icon="['fas', 'right-to-bracket']"/>
-      <div class="login-form p-10 rounded-4xl flex flex-col gap-10 items-center h-100">
+      <div class="login-form p-10 rounded-4xl flex flex-col gap-7 items-center justify-between h-110">
 
         <div class="login-oauth border-b-1 border-gray-300 pb-5 p-1 flex flex-row
           justify-center-safe gap-20 w-full text-3xl">
@@ -53,7 +54,7 @@ export default {
           </button>
         </div>
 
-        <form @submit.prevent="login" class="w-full flex flex-col gap-4" action="" >
+        <form @submit.prevent="login" class="w-full grow flex flex-col gap-4" action="" >
 
           <div class="input-feild flex flex-col">
             <label for="username" class="absolute text-black-100 flex flex-row justify-between
@@ -76,6 +77,7 @@ export default {
           <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
           hover:scale-105 transition-all" type="submit">Login</button>
         </form>
+      <span class="text-red-900">{{ loginMessage }}</span>
       <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2signin')" type="button">SignIn</button>
       </div>
 

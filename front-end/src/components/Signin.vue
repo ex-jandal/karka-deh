@@ -5,13 +5,14 @@ export default {
       signinUsername: '',
       signinPassword: '',
       signinConformPassword: '',
+      signinMessage: '',
     }
   },
   methods: {
     async signin() {
 
       if (this.signinConformPassword != this.signinPassword) {
-        alert("Not mattched Passwords..\nRewrite your password agine.")
+        this.signinMessage = "Not mattched Passwords.. Rewrite your password agine.";
         return;
       }
       const signinResponse = await fetch('http://localhost:8080/auth/signup', {
@@ -25,11 +26,12 @@ export default {
 
       if (signinResponse.ok) {
         this.showLogin;
-        alert('You are sign in..\nYou should login with your accont after reloading the page.');
+        this.signinMessage = 'Sign in successfuly..\nYou will be redirect after 5 seconed to login page';
+        await new Promise(reslove => setTimeout(reslove, 5000))
         window.location.reload();
 
       } else {
-        alert('Signin failed');
+        this.signinMessage = 'Signin failed.. You have entered a used username';
       }
     }
   },
@@ -39,7 +41,7 @@ export default {
 <template>
 <div>
 
-    <div class="login-section pb-[25px] h-screen w-screen sm:w-140 sm:h-190 flex flex-col
+    <div class="login-section pb-[25px] h-screen w-screen sm:w-140 sm:h-220 flex flex-col
       justify-center items-center sm:rounded-4xl">
       <font-awesome-icon class="text-5xl grow" :icon="['fas', 'user']"/>
       <div class="login-form p-10 rounded-4xl flex flex-col gap-10 items-center ">
@@ -115,6 +117,7 @@ export default {
           <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
           hover:scale-105 transition-all" type="submit">Signin</button>
         </form>
+        <span class="text-red-900">{{ signinMessage }}</span>
         <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2login')"
           type="button">Login</button>
       </div>
