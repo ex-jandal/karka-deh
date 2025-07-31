@@ -28,8 +28,8 @@ public class CommentService {
     this.commentMapper = commentMapper;
   }
 
-  public List<CommentResponse> getAllPostComments(UUID postId, String username) {
-    List<CommentResponse> comments = this.commentRepo.getAllPostCommentsByUser(postId, username).stream()
+  public List<CommentResponse> getAllPostComments(String slug, String username) {
+    List<CommentResponse> comments = this.commentRepo.getAllPostCommentsByUser(slug, username).stream()
         .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
 
     return comments;

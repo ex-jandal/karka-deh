@@ -46,6 +46,10 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   }
 
+  public Optional<UUID> findPostIdBySlug(String slug) {
+    return this.findBySlug(slug).map(post -> post.getId());
+  }
+
   public Optional<PostEntity> findBySlug(String slug) {
     String sql = "SELECT * FROM posts WHERE slug = ?";
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), slug).stream().findFirst();

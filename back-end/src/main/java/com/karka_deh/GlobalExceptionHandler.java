@@ -45,6 +45,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
   }
 
+  @ExceptionHandler(SlugNotFoundException.class)
+  public ResponseEntity<?> handleSlugNotFound(Exception ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
+  }
+
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)

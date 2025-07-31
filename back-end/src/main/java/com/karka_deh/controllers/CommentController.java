@@ -43,10 +43,10 @@ public class CommentController {
       @ApiResponse(responseCode = "200", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
   })
-  @GetMapping("/me/{post_id}")
-  public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable("post_id") String postId,
+  @GetMapping("/me/{slug}")
+  public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable("slug") String slug,
       Authentication auth) {
-    var comments = this.commentService.getAllPostComments(UUID.fromString(postId), auth.getName());
+    var comments = this.commentService.getAllPostComments(slug, auth.getName());
 
     return ResponseEntity.ok(comments);
   }

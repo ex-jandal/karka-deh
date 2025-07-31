@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.karka_deh.errors.SlugNotFoundException;
 import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
@@ -23,8 +24,12 @@ import com.karka_deh.models.entities.CommentEntity;
 @DependsOn("postRepo")
 public class CommentRepo extends BaseRepo<CommentEntity> {
 
-  public CommentRepo(JdbcTemplate jdbc) {
+  private final PostRepo postRepo;
+
+  public CommentRepo(JdbcTemplate jdbc, PostRepo postRepo) {
     super(jdbc, CommentEntity.class, "comments");
+
+    this.postRepo = postRepo;
   }
 
   @Override
@@ -40,7 +45,8 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public List<CommentEntity> getAllPostCommentsByUser(UUID postId, String username) {
+  public List<CommentEntity> getAllPostCommentsByUser(String slug, String username) {
+    UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
     String sql = """
         -- select everything from comments and alias it to 'c'
         SELECT c.* FROM comments c
