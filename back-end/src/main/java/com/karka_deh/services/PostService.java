@@ -35,23 +35,6 @@ public class PostService {
     this.postMapper = postMapper;
   }
 
-  // private Page<PostResponse> postsToPageOfPostResponse(
-  // Pageable pageable,
-  // BiFunction<Integer, Integer, Posts> postFunc) {
-  // int page = pageable.getPageNumber();
-  // int size = pageable.getPageSize();
-  //
-  // Posts posts = postFunc.apply(page, size);
-  //
-  // int total = posts.getCount();
-  //
-  // List<PostResponse> responses = posts.getPostEntities().stream()
-  // .map(this.postMapper::toPostResponse)
-  // .toList();
-  //
-  // return new PageImpl<>(responses, pageable, total);
-  // }
-
   public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
     UUID userId = this.userService.getUserId(username)
         .orElseThrow(() -> new UserNotFoundException(username));

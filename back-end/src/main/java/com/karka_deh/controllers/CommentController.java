@@ -46,9 +46,11 @@ public class CommentController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
   })
   @GetMapping("/me/{slug}")
-  public ResponseEntity<List<CommentResponse>> getUserPostComments(@PathVariable("slug") String slug,
-      Authentication auth) {
-    var comments = this.commentService.getUserPostComments(slug, auth.getName());
+  public ResponseEntity<Page<CommentResponse>> getUserPostComments(
+      @PathVariable("slug") String slug,
+      Authentication auth,
+      Pageable pageable) {
+    var comments = this.commentService.getUserPostComments(slug, auth.getName(), pageable);
 
     return ResponseEntity.ok(comments);
   }
@@ -59,9 +61,11 @@ public class CommentController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
   })
   @GetMapping("/all/{slug}")
-  public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable("slug") String slug,
-      Authentication auth) {
-    var comments = this.commentService.getAllPostComments(slug);
+  public ResponseEntity<Page<CommentResponse>> getAllPostComments(
+      @PathVariable("slug") String slug,
+      Authentication auth,
+      Pageable pageable) {
+    var comments = this.commentService.getAllPostComments(slug, pageable);
 
     return ResponseEntity.ok(comments);
   }
@@ -73,7 +77,9 @@ public class CommentController {
 
   })
   @PostMapping
-  public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, Authentication auth) {
+  public ResponseEntity<?> createComment(
+      @Valid @RequestBody CommentRequest commentRequest,
+      Authentication auth) {
     this.commentService.createComment(commentRequest, auth.getName());
 
     return ResponseEntity.status(HttpStatus.CREATED).build();

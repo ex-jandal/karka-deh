@@ -3,14 +3,18 @@ package com.karka_deh.repos;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,6 +24,8 @@ import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.CommentEntity;
+import com.karka_deh.models.entities.PostEntity;
+import com.karka_deh.models.repo_find.Comments;
 
 @Repository
 @DependsOn("postRepo")
@@ -46,8 +52,14 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public List<CommentEntity> getUserPostComments(String slug, String username) {
+  public Comments getUserPostComments(String slug, String username, Pageable pageable) {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
+
+    int size = pageable.getPageSize();
+    int page = pageable.getPageNumber();
+
+    int offset = size * page;
+
     String sql = """
         -- select everything from comments and alias it to 'c'
         SELECT c.*, COUNT(*) OVER() AS total_count
@@ -61,22 +73,46 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
         -- because a user can comment multiple times
         WHERE c.post_id = ? AND u.username = ?
 
-        LIMIT = ? OFFSET = ?
+        LIMIT ? OFFSET ?
         """;
 
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId, username);
+    return this.jdbc.query(sql, rs -> {
+      return this.collectComments(rs, pageable);
+    }, postId, username, size, offset);
   }
 
-  public List<CommentEntity> getAllPostComments(String slug) {
+  public Comments getAllPostComments(String slug, Pageable pageable) {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
 
     String sql = """
-        SELECT * FROM comments
+        SELECT *, COUNT(*) OVER() AS total_count FROM comments
 
         WHERE post_id = ?
         """;
 
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId);
+    return this.jdbc.query(sql, rs -> {
+      return this.collectComments(rs, pageable);
+    }, postId);
+  }
+
+  private Comments collectComments(ResultSet rs, Pageable pageable) throws SQLException {
+
+    var posts = new ArrayList<CommentEntity>();
+
+    int totalCount = 0;
+    var mapper = new BeanPropertyRowMapper<>(CommentEntity.class);
+
+    while (rs.next()) {
+      // get every row except the last one, the `total_count`
+      CommentEntity post = mapper.mapRow(rs, rs.getRow() - 1);
+      posts.add(post);
+
+      if (totalCount == 0) {
+        totalCount = rs.getInt("total_count");
+      }
+    }
+
+    return new Comments(totalCount, posts, pageable);
   }
 
   @Override

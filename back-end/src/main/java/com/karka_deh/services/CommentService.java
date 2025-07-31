@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Comment;
@@ -35,23 +36,16 @@ public class CommentService {
     this.postRepo = postRepo;
   }
 
-  public List<CommentResponse> getUserPostComments(String slug, String username) {
-    List<CommentResponse> comments = this.commentRepo.getUserPostComments(slug, username).stream()
-        .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
-
-    return comments;
-
+  public Page<CommentResponse> getUserPostComments(String slug, String username, Pageable pageable) {
+    return this.commentRepo.getUserPostComments(slug, username, pageable).toPage(this.commentMapper::toCommentResponse);
   }
 
-  public List<CommentResponse> getAllPostComments(String slug) {
-    List<CommentResponse> comments = this.commentRepo.getAllPostComments(slug).stream()
-        .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
-
-    return comments;
+  public Page<CommentResponse> getAllPostComments(String slug, Pageable pageable) {
+    return this.commentRepo.getAllPostComments(slug, pageable).toPage(this.commentMapper::toCommentResponse);
   }
 
   public void createComment(CommentRequest commentRequest, String username) {
-    UUID user_id = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
+    UUID userId = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
     UUID id = UUID.randomUUID();
     var postSlug = commentRequest.getPostSlug();
 
@@ -62,7 +56,7 @@ public class CommentService {
 
     commentEntity.setId(id);
     commentEntity.setPostId(postId);
-    commentEntity.setAuthorId(user_id);
+    commentEntity.setAuthorId(userId);
 
     this.commentRepo.save(commentEntity);
   }
