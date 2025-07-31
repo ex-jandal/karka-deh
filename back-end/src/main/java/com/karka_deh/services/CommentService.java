@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Comment;
 
 import com.karka_deh.errors.SlugNotFoundException;
 import com.karka_deh.errors.UserNotFoundException;
@@ -33,12 +34,19 @@ public class CommentService {
     this.postRepo = postRepo;
   }
 
-  public List<CommentResponse> getAllPostComments(String slug, String username) {
-    List<CommentResponse> comments = this.commentRepo.getAllPostCommentsByUser(slug, username).stream()
+  public List<CommentResponse> getUserPostComments(String slug, String username) {
+    List<CommentResponse> comments = this.commentRepo.getUserPostComments(slug, username).stream()
         .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
 
     return comments;
 
+  }
+
+  public List<CommentResponse> getAllPostComments(String slug) {
+    List<CommentResponse> comments = this.commentRepo.getAllPostComments(slug).stream()
+        .map(comment -> this.commentMapper.toCommentResponse(comment)).toList();
+
+    return comments;
   }
 
   public void createComment(CommentRequest commentRequest, String username) {

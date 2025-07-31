@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,7 +46,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public List<CommentEntity> getAllPostCommentsByUser(String slug, String username) {
+  public List<CommentEntity> getUserPostComments(String slug, String username) {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
     String sql = """
         -- select everything from comments and alias it to 'c'
@@ -60,6 +61,18 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
         """;
 
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId, username);
+  }
+
+  public List<CommentEntity> getAllPostComments(String slug) {
+    UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
+
+    String sql = """
+        SELECT * FROM comments
+
+        WHERE post_id = ?
+        """;
+
+    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId);
   }
 
   @Override
