@@ -1,5 +1,6 @@
 package com.karka_deh.models.requests.auth;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -7,6 +8,7 @@ public class SignupRequest {
 
   @NotNull(message = "username is required")
   @Size(min = 3, max = 64)
+  @Schema(description = "Username", example = "abdullah")
   private String username;
 
   /*
@@ -18,6 +20,7 @@ public class SignupRequest {
 
   @NotNull(message = "password is required")
   @Size(min = 8, max = 128)
+  @Schema(description = "User password", example = "verysecure")
   private String password;
 
   public String getPassword() {

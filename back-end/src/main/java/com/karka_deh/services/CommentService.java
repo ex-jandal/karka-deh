@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.karka_deh.errors.UserNotFoundException;
 import com.karka_deh.models.entities.CommentEntity;
 import com.karka_deh.models.mappers.CommentMapper;
 import com.karka_deh.models.requests.CommentRequest;
@@ -36,7 +37,7 @@ public class CommentService {
   }
 
   public void createComment(CommentRequest commentRequest, String username) {
-    UUID user_id = this.userService.getUserId(username).get();
+    UUID user_id = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
     UUID id = UUID.randomUUID();
 
     CommentEntity commentEntity = this.commentMapper.toCommentEntity(commentRequest);

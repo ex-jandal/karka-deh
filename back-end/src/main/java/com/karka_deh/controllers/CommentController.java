@@ -17,23 +17,46 @@ import com.karka_deh.models.requests.CommentRequest;
 import com.karka_deh.models.responses.CommentResponse;
 import com.karka_deh.services.CommentService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 
 @RequestMapping("/comments")
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-public class Comment {
+@Tag(name = "Comments")
+public class CommentController {
   private final CommentService commentService;
 
-  public Comment(CommentService commentService) {
+  public CommentController(CommentService commentService) {
     this.commentService = commentService;
   }
 
-  @GetMapping("/all/{post_id}")
-  public List<CommentResponse> getAllPostComments(@PathVariable("post_id") String postId, Authentication auth) {
-    return this.commentService.getAllPostComments(UUID.fromString(postId), auth.getName());
+  @Operation(summary = "get all the user comments for a post")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
+  })
+  @GetMapping("/me/{post_id}")
+  public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable("post_id") String postId,
+      Authentication auth) {
+    var comments = this.commentService.getAllPostComments(UUID.fromString(postId), auth.getName());
+
+    return ResponseEntity.ok(comments);
   }
+
+  @Operation(summary = "create a new comment")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201"),
+      @ApiResponse(responseCode = "404", description = "the user was not found")
+
+  })
 
   @PostMapping
   public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, Authentication auth) {

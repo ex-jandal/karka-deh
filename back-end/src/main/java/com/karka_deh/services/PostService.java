@@ -20,7 +20,6 @@ import com.karka_deh.models.repo_find.Posts;
 import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.repos.PostRepo;
-import com.karka_deh.repos.UserRepo;
 
 @Service
 public class PostService {
@@ -38,7 +37,7 @@ public class PostService {
 
   public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
     // should not happen but handle it anyway
-    UUID userId = this.userService.getUserId(username).get();
+    UUID userId = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
 
     int page = pageable.getPageNumber();
     int size = pageable.getPageSize();
@@ -68,8 +67,8 @@ public class PostService {
 
   }
 
-  public Optional<PostResponse> findBySlug(String title) {
-    return this.postRepo.findBySlug(title).map(entity -> {
+  public Optional<PostResponse> findBySlug(String slug) {
+    return this.postRepo.findBySlug(slug).map(entity -> {
       return this.postMapper.toPostResponse(entity);
     });
   }

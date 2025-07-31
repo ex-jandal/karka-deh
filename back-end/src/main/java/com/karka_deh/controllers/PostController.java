@@ -23,13 +23,20 @@ import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.services.PostService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/posts")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Posts", description = "Operation related to posts")
 public class PostController {
   private final PostService postService;
 
@@ -37,6 +44,12 @@ public class PostController {
     this.postService = postService;
   }
 
+  @Operation(summary = "Get a post by the slug (a slug is like the title, but it shows in the url)", description = "Return a single post")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found the post", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
+      @ApiResponse(responseCode = "404", description = "There no such slug")
+  })
   @GetMapping("/slug/{slug}")
   public ResponseEntity<PostResponse> getBySlug(@PathVariable String slug) {
     var post = this.postService.findBySlug(slug);
@@ -50,6 +63,22 @@ public class PostController {
    * /posts/me?page=1&size=10&sort=createdAt,desc
    *
    */
+
+  @Operation(summary = "get all the posts published by the user", description = """
+      this endpoint is pageable, meaning you can pass in queries to limit the returned values, for example:
+
+        to get only 2 posts
+        GET localhost:8080/post/me?size=2
+
+        or specify the amount of pages
+        GET localhost:8080/post/me?page=2
+
+      """)
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
+      @ApiResponse(responseCode = "404", description = "The user was not found")
+  })
   @GetMapping("/me")
   public ResponseEntity<Page<PostResponse>> getAllUserPosts(Pageable pageable, Authentication auth) {
     var posts = this.postService.getAllUserPosts(auth.getName(), pageable);
@@ -57,6 +86,12 @@ public class PostController {
     return ResponseEntity.ok(posts);
   }
 
+  @Operation(summary = "search on posts globally", description = "this endpoint is pageable")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
+      @ApiResponse(responseCode = "400", description = "you did not specify the `q` query or it's empty")
+  })
   @GetMapping("/search")
   public ResponseEntity<Page<PostResponse>> searchPosts(@RequestParam("q") String keyword, Pageable pageable,
       Authentication auth) {
@@ -84,12 +119,14 @@ public class PostController {
   // Authentication auth) {
   // }
 
-  // @Operation(summary = "Create a post", responses = {
-  // @ApiResponse(responseCode = "201", description = "Created"),
-  // @ApiResponse(responseCode = "400", description = "Invalid post data"),
-  // @ApiResponse(responseCode = "409", description = "Slug already exists"),
-  // @ApiResponse(responseCode = "500", description = "Server error")
-  // })
+
+  @Operation(summary = "create a new post")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "post created"),
+      // TODO: maybe we can instead suffix it with something instead of error out
+      @ApiResponse(responseCode = "409", description = "the slug is already used"),
+      @ApiResponse(responseCode = "404", description = "the user was not found")
+  })
   @PostMapping
   public ResponseEntity<Void> createPost(@Valid @RequestBody PostRequest post, Authentication auth) {
     this.postService.createPost(post, auth.getName());
