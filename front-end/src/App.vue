@@ -1,13 +1,14 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
+import LoginScreen from './views/SigninScreen.vue'
 document.documentElement.lang='ar'
 document.documentElement.dir='rtl'
 </script>
 
 <template>
   <Navbar />
-  <div class="main ">
-    <router-view class=""></router-view>
+  <div class="main">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -31,7 +32,7 @@ body {
   height: calc(100vh - 10px);
   margin: auto;
   max-width: 1024px;
-  margin-top: 100px;
+  margin-top: 85px;
   /* color: white; */
   /*   background-color: white; */
   /*   box-shadow: 0px 0px 10px black inset; */

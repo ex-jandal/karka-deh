@@ -1,6 +1,3 @@
-<script setup>
-import LoginScreen from '../components/LoginScreen.vue';
-</script>
 <script>
 export default {
   data() {
@@ -12,13 +9,13 @@ export default {
         'items-center',
         'justify-center',
         'h-14',
-        'shadow-xl',
+        'shadow-sm',
         'mr-2',
         'w-14',
         'my-2',
         'rounded-4xl',
-        'hover:rounded-xl',
-        'hover:scale-105',
+        'hover:rounded-3xl',
+        'hover:scale-107',
         'transition-all',
       ],
       iconContext: [
@@ -34,12 +31,6 @@ export default {
         'duration-100',
         'absolute',
       ],
-      loginVisiable: ['hidden', 'transition-all'],
-    }
-  },
-  methods: {
-    loginShow() {
-      this.loginVisiable[0]=='hidden'? this.loginVisiable[0]='block':this.loginVisiable[0]='hidden'
     }
   },
 }
@@ -47,7 +38,7 @@ export default {
 
 <template>
   <nav class="fixed top-0 right-0 pr-2 flex-row m-2 flex justify-between items-center gap-2 h-20 overflow-hidden">
-    <div class="right-side shadow-sm flex flex-row pr-5 pl-4">
+    <div class="right-side shadow-sm flex flex-row pr-5 pl-3">
       <router-link
         to="/"
         class="flex flex-row justify-center items-center"
@@ -75,18 +66,17 @@ export default {
       </router-link>
     </div>
 
-    <button
-      @click="loginShow"
-      class="login user-info relative"
+    <router-link
+      to="/loginScreen"
+      class="relative"
     >
       <div class="left-side transition-all shadow-sm flex flex-row justify-center gap-3 items-center
-        m-2 h-16 w-20 sm:w-40">
+        m-2 h-16 w-20 sm:w-40 rounded-4xl hover:rounded-3xl hover:scale-105">
         <font-awesome-icon :icon="['fas', 'user']" />
         <span class="hidden sm:inline">سجل الدخول</span>
       </div>
-    </button>
+    </router-link>
   </nav>
-  <LoginScreen :class="loginVisiable" />
 </template>
 <style>
 nav {
@@ -117,12 +107,15 @@ nav {
 .left-side {
   background-color: var(--therd-color);
   color: var(--forth-color);
-  border-radius: 50px;
   /* height: 120%; */
 }
 .left-side:hover {
   background-color: var(--forth-color);
   color: var(--therd-color);
-  border-radius: 20px;
 }
+left-side.router-link-exact-active {
+  background-color: var(--forth-color);
+  color: var(--therd-color);
+}
+
 </style>
