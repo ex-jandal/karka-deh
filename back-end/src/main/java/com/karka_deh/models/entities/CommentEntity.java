@@ -65,4 +65,15 @@ public class CommentEntity {
     this.id = id;
   }
 
+  @Override
+  public String toString() {
+    return "CommentEntity {" +
+        "id='" + this.id + '\'' +
+        ", authorId='" + this.authorId + '\'' +
+        ", postId='" + this.postId + '\'' +
+        ", content='" + this.content + '\'' +
+        ", createdAt=" + this.createdAt +
+        '}';
+  }
+
 }
