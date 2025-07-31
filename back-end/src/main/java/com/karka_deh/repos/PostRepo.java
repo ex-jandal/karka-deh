@@ -6,9 +6,9 @@ import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.repo_find.Posts;
 
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -60,15 +60,18 @@ public class PostRepo extends BaseRepo<PostEntity> {
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id);
   }
 
-  public List<PostEntity> findAllPostsByUserId(UUID id, int page, int size) {
+  public Posts findAllPostsByUserId(UUID id, int page, int size) {
     int offset = size * page;
 
     String sql = """
-        SELECT * FROM posts WHERE author_id = ?
-        ORDER BY created_at
+        SELECT *, COUNT(*) OVER() as total_count
+        FROM posts WHERE author_id = ?
+        ORDER BY created_at DESC
         LIMIT ? OFFSET ?
         """;
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id, size, offset);
+    return this.jdbc.query(sql, rs -> {
+      return this.collectPosts(rs);
+    }, id, size, offset);
   }
 
   public Posts searchPosts(String keyword, int page, int size) {
@@ -85,31 +88,30 @@ public class PostRepo extends BaseRepo<PostEntity> {
     String likeQuery = "%" + keyword.toLowerCase() + "%";
 
     return this.jdbc.query(sql, rs -> {
-      var posts = new ArrayList<PostEntity>();
-
-      int totalCount = 0;
-      var mapper = new BeanPropertyRowMapper<>(PostEntity.class);
-
-      while (rs.next()) {
-        // get every row except the last one, the `total_count`
-        PostEntity post = mapper.mapRow(rs, rs.getRow() - 1);
-        posts.add(post);
-
-        if (totalCount == 0) {
-          totalCount = rs.getInt("total_count");
-        }
-      }
-
-      return new Posts(totalCount, posts);
+      return this.collectPosts(rs);
 
     }, likeQuery, likeQuery, size, offset);
 
   }
 
-  public int countPostsByUserId(UUID userId) {
-    String sql = "SELECT COUNT(*) FROM posts WHERE author_id = ?";
-    Integer total = jdbc.queryForObject(sql, Integer.class, userId);
-    return total != null ? total : 0;
+  private Posts collectPosts(ResultSet rs) throws SQLException {
+
+    var posts = new ArrayList<PostEntity>();
+
+    int totalCount = 0;
+    var mapper = new BeanPropertyRowMapper<>(PostEntity.class);
+
+    while (rs.next()) {
+      // get every row except the last one, the `total_count`
+      PostEntity post = mapper.mapRow(rs, rs.getRow() - 1);
+      posts.add(post);
+
+      if (totalCount == 0) {
+        totalCount = rs.getInt("total_count");
+      }
+    }
+
+    return new Posts(totalCount, posts);
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.karka_deh.models.responses;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -15,6 +16,17 @@ public class CommentResponse {
 
   public UUID getAuthorId() {
     return authorId;
+  }
+
+  @JsonAlias("created_at")
+  private LocalDateTime createdAt;
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   public void setAuthorId(UUID authorId) {

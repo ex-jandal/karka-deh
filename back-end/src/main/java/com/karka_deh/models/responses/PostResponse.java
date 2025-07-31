@@ -5,11 +5,9 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 
 public class PostResponse {
   @JsonAlias("created_at")
-  @Null
   private LocalDateTime createdAt;
 
   @NotNull(message = "title is required")

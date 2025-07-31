@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 
 import com.karka_deh.errors.SlugAlreadExistsException;
 import com.karka_deh.errors.UserNotFoundException;
-import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.mappers.PostMapper;
 import com.karka_deh.models.repo_find.Posts;
 import com.karka_deh.models.requests.PostRequest;
@@ -35,36 +35,34 @@ public class PostService {
     this.postMapper = postMapper;
   }
 
-  public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
-    // should not happen but handle it anyway
-    UUID userId = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
-
+  private Page<PostResponse> postsToPageOfPostResponse(
+      Pageable pageable,
+      BiFunction<Integer, Integer, Posts> postFunc) {
     int page = pageable.getPageNumber();
     int size = pageable.getPageSize();
 
-    List<PostEntity> entities = this.postRepo.findAllPostsByUserId(userId, page, size);
-    int total = this.postRepo.countPostsByUserId(userId);
+    Posts posts = postFunc.apply(page, size);
 
-    List<PostResponse> responses = entities.stream()
+    int total = posts.getCount();
+
+    List<PostResponse> responses = posts.getPostEntities().stream()
         .map(this.postMapper::toPostResponse)
         .toList();
 
     return new PageImpl<>(responses, pageable, total);
   }
 
+  public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
+    UUID userId = this.userService.getUserId(username)
+        .orElseThrow(() -> new UserNotFoundException(username));
+
+    return this.postsToPageOfPostResponse(pageable,
+        (page, size) -> this.postRepo.findAllPostsByUserId(userId, page, size));
+  }
+
   public Page<PostResponse> searchPost(String username, String keyword, Pageable pageable) {
-    int page = pageable.getPageNumber();
-    int size = pageable.getPageSize();
-
-    Posts posts = this.postRepo.searchPosts(keyword, page, size);
-
-    int total = posts.getCount();
-
-    List<PostResponse> responses = posts.getPostEntities().stream().map(this.postMapper::toPostResponse)
-        .toList();
-
-    return new PageImpl<>(responses, pageable, total);
-
+    return this.postsToPageOfPostResponse(pageable,
+        (page, size) -> this.postRepo.searchPosts(keyword, page, size));
   }
 
   public Optional<PostResponse> findBySlug(String slug) {

@@ -3,7 +3,6 @@ package com.karka_deh.models.repo_find;
 
 import java.util.List;
 
-import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.entities.UserEntity;
 
 public class Users {
