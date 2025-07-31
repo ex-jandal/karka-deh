@@ -1,24 +1,18 @@
 package com.karka_deh.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.services.PostService;
@@ -80,10 +74,10 @@ public class PostController {
       @ApiResponse(responseCode = "404", description = "The user was not found")
   })
   @GetMapping("/me")
-  public ResponseEntity<Page<PostResponse>> getAllUserPosts(Pageable pageable, Authentication auth) {
+  public ResponseEntity<PagedModel<PostResponse>> getAllUserPosts(Pageable pageable, Authentication auth) {
     var posts = this.postService.getAllUserPosts(auth.getName(), pageable);
 
-    return ResponseEntity.ok(posts);
+    return ResponseEntity.ok(new PagedModel<>(posts));
   }
 
   @Operation(summary = "search on posts globally", description = "this endpoint is pageable")
@@ -93,18 +87,18 @@ public class PostController {
       @ApiResponse(responseCode = "400", description = "you did not specify the `q` query or it's empty")
   })
   @GetMapping("/search")
-  public ResponseEntity<Page<PostResponse>> searchPosts(@RequestParam("q") String keyword, Pageable pageable,
+  public ResponseEntity<PagedModel<PostResponse>> searchPosts(@RequestParam("q") String keyword, Pageable pageable,
       Authentication auth) {
 
     var trimmedKeyword = keyword == null ? "" : keyword.trim();
 
     if (trimmedKeyword.isEmpty()) {
-      return ResponseEntity.badRequest().body(Page.empty());
+      return ResponseEntity.badRequest().body(new PagedModel<>(Page.empty()));
     }
 
     var posts = this.postService.searchPost(auth.getName(), keyword, pageable);
 
-    return ResponseEntity.ok(posts);
+    return ResponseEntity.ok(new PagedModel<>(posts));
   }
 
   // @PutMapping("/{id}")
@@ -118,7 +112,6 @@ public class PostController {
   // public ResponseEntity<Void> deletePost(@PathVariable String id,
   // Authentication auth) {
   // }
-
 
   @Operation(summary = "create a new post")
   @ApiResponses(value = {

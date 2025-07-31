@@ -1,10 +1,7 @@
 package com.karka_deh.controllers;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,13 +43,13 @@ public class CommentController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
   })
   @GetMapping("/me/{slug}")
-  public ResponseEntity<Page<CommentResponse>> getUserPostComments(
+  public ResponseEntity<PagedModel<CommentResponse>> getUserPostComments(
       @PathVariable("slug") String slug,
       Authentication auth,
       Pageable pageable) {
     var comments = this.commentService.getUserPostComments(slug, auth.getName(), pageable);
 
-    return ResponseEntity.ok(comments);
+    return ResponseEntity.ok(new PagedModel<>(comments));
   }
 
   @Operation(summary = "get all the comments for a post")
@@ -61,13 +58,13 @@ public class CommentController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class)) }),
   })
   @GetMapping("/all/{slug}")
-  public ResponseEntity<Page<CommentResponse>> getAllPostComments(
+  public ResponseEntity<PagedModel<CommentResponse>> getAllPostComments(
       @PathVariable("slug") String slug,
       Authentication auth,
       Pageable pageable) {
     var comments = this.commentService.getAllPostComments(slug, pageable);
 
-    return ResponseEntity.ok(comments);
+    return ResponseEntity.ok(new PagedModel<>(comments));
   }
 
   @Operation(summary = "create a new comment")
