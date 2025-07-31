@@ -47,8 +47,10 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
         new Column("author_id", "UUID", "NOT NULL"),
         new Column("content", "TEXT", "NOT NULL"),
         new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
-        new StandaloneConstraint("CONSTRAINT fk_comment_post_post FOREIGN KEY (post_id) REFERENCES posts(id)"),
-        new StandaloneConstraint("CONSTRAINT fk_comment_author_users FOREIGN KEY (author_id) REFERENCES users(id)"));
+        new StandaloneConstraint(
+            "CONSTRAINT fk_comment_post_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE"),
+        new StandaloneConstraint(
+            "CONSTRAINT fk_comment_author_users FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE"));
 
   }
 

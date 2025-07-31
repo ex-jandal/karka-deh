@@ -45,7 +45,8 @@ public class PostRepo extends BaseRepo<PostEntity> {
         new Column("slug", "VARCHAR(255)", "NOT NULL", "UNIQUE"),
         new Column("content", "TEXT", "NOT NULL"),
         new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
-        new StandaloneConstraint("CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id)"));
+        new StandaloneConstraint(
+            "CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE"));
 
   }
 
