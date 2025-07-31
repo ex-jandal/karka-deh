@@ -1,8 +1,25 @@
 <script setup>
+
+$cookies.set('test', 'one cup of tea', '1h')
+console.log($cookies.get('test'))
+
+</script>
+<script>
 import Navbar from './components/Navbar.vue'
 import LoginScreen from './views/SigninScreen.vue'
+
 document.documentElement.lang='ar'
 document.documentElement.dir='rtl'
+
+export default {
+  components: {
+    Navbar,
+    LoginScreen,
+  },
+  methods() {
+  }
+
+}
 </script>
 
 <template>

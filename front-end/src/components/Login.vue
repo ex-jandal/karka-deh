@@ -42,7 +42,8 @@ export default {
               text-black" type="password" required placeholder="Password"/>
           </div>
 
-          <input class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl transition-all" type="submit" value="login">
+          <input class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
+          hover:scale-105 transition-all" type="submit" value="login">
         </form>
       <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2signin')" type="button">SignIn</button>
       </div>
