@@ -5,9 +5,11 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,19 +46,12 @@ public class PostController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
       @ApiResponse(responseCode = "404", description = "There no such slug")
   })
-  @GetMapping("/slug/{slug}")
+  @GetMapping("/{slug}")
   public ResponseEntity<PostResponse> getBySlug(@PathVariable String slug) {
     var post = this.postService.findBySlug(slug);
 
     return post.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
-
-  /**
-   * a pageable posts
-   *
-   * /posts/me?page=1&size=10&sort=createdAt,desc
-   *
-   */
 
   @Operation(summary = "get all the posts published by the user", description = """
       this endpoint is pageable, meaning you can pass in queries to limit the returned values, for example:
@@ -101,17 +96,25 @@ public class PostController {
     return ResponseEntity.ok(new PagedModel<>(posts));
   }
 
-  // @PutMapping("/{id}")
-  // public ResponseEntity<Void> updatePost(@Valid @RequestBody PostRequest post,
-  // @PathVariable String id,
-  // Authentication auth) {
-  //
-  // }
-  //
-  // @DeleteMapping("/{id}")
-  // public ResponseEntity<Void> deletePost(@PathVariable String id,
-  // Authentication auth) {
-  // }
+  @PutMapping("/{slug}")
+  public ResponseEntity<Void> updatePost(
+      @Valid @RequestBody PostRequest newPost,
+      @PathVariable String slug,
+      Authentication auth) {
+    this.postService.updateUserPost(auth.getName(), slug, newPost);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  @DeleteMapping("/{slug}")
+  public ResponseEntity<Void> deletePost(
+      @PathVariable String slug,
+      Authentication auth) {
+
+    this.postService.deleteUserPost(auth.getName(), slug);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 
   @Operation(summary = "create a new post")
   @ApiResponses(value = {

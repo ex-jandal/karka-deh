@@ -41,18 +41,24 @@ public class GlobalExceptionHandler {
   // custom errors
   //
   @ExceptionHandler(SlugAlreadExistsException.class)
-  public ResponseEntity<?> handleSlugAlreadyExists(Exception ex) {
+  public ResponseEntity<?> handleSlugAlreadyExists(SlugAlreadExistsException ex) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
   }
 
   @ExceptionHandler(SlugNotFoundException.class)
-  public ResponseEntity<?> handleSlugNotFound(Exception ex) {
+  public ResponseEntity<?> handleSlugNotFound(SlugNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
   }
 
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(Map.of("error", ex.getMessage()));
+  }
+
+  @ExceptionHandler(PostNotOwnedByUser.class)
+  public ResponseEntity<?> handlePostNotOwnedByUser(PostNotOwnedByUser ex) {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN)
         .body(Map.of("error", ex.getMessage()));
   }
 

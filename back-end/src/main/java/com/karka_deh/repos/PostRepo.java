@@ -5,6 +5,7 @@ import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.PostEntity;
 import com.karka_deh.models.repo_find.Posts;
+import com.karka_deh.models.requests.PostRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,6 +47,35 @@ public class PostRepo extends BaseRepo<PostEntity> {
         new Column("created_at", "TIMESTAMP WITH TIME ZONE", "DEFAULT", "CURRENT_TIMESTAMP"),
         new StandaloneConstraint("CONSTRAINT fk_posts_author FOREIGN KEY (author_id) REFERENCES users(id)"));
 
+  }
+
+  public void updateUserPost(UUID postId, Map<String, String> fields) {
+    if (fields.isEmpty()) {
+      return; // nothing to update
+    }
+
+    StringBuilder sql = new StringBuilder("UPDATE posts SET ");
+    List<Object> values = new ArrayList<>();
+
+    int i = 0;
+    for (var entry : fields.entrySet()) {
+      sql.append(entry.getKey()).append(" = ?");
+      values.add(entry.getValue());
+
+      if (i < fields.size() - 1) {
+        sql.append(", ");
+      }
+      i++;
+    }
+
+    sql.append(" WHERE id = ?");
+    values.add(postId);
+
+    this.jdbc.update(sql.toString(), values.toArray());
+  }
+
+  public void deleteUserPost(String slug) {
+    this.jdbc.update("DELETE FROM posts WHERE slug = ?", slug);
   }
 
   public Optional<UUID> findPostIdBySlug(String slug) {

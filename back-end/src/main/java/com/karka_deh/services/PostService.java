@@ -2,7 +2,9 @@ package com.karka_deh.services;
 
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import com.karka_deh.errors.PostNotOwnedByUser;
 import com.karka_deh.errors.SlugAlreadExistsException;
+import com.karka_deh.errors.SlugNotFoundException;
 import com.karka_deh.errors.UserNotFoundException;
 import com.karka_deh.models.mappers.PostMapper;
 import com.karka_deh.models.repo_find.Posts;
@@ -51,6 +55,42 @@ public class PostService {
     return this.postRepo.findBySlug(slug).map(entity -> {
       return this.postMapper.toPostResponse(entity);
     });
+  }
+
+  public void updateUserPost(String username, String slug, PostRequest newPost) {
+    var userId = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
+    var post = this.postRepo.findBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
+
+    if (!post.getAuthorId().equals(userId)) {
+      throw new PostNotOwnedByUser();
+    }
+
+    Map<String, String> filedsToUpdate = new HashMap<>();
+
+    var newTitle = newPost.getTitle();
+    if (!newTitle.isBlank() && !newTitle.equals(post.getTitle())) {
+      filedsToUpdate.put("title", newTitle);
+      // if the title changed, then we should also change the slug
+      filedsToUpdate.put("slug", PostService.slugify(newTitle));
+    }
+
+    var newContent = newPost.getContent();
+    if (!newContent.isBlank() && !newContent.equals(post.getContent())) {
+      filedsToUpdate.put("content", newPost.getContent());
+    }
+
+    this.postRepo.updateUserPost(post.getId(), filedsToUpdate);
+  }
+
+  public void deleteUserPost(String username, String slug) {
+    var userId = this.userService.getUserId(username).orElseThrow(() -> new UserNotFoundException(username));
+    var post = this.postRepo.findBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
+
+    if (!post.getAuthorId().equals(userId)) {
+      throw new PostNotOwnedByUser();
+    }
+
+    this.postRepo.deleteUserPost(slug);
   }
 
   public void createPost(PostRequest postRequest, String username) {
