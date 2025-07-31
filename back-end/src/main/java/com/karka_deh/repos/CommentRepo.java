@@ -50,7 +50,9 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
     String sql = """
         -- select everything from comments and alias it to 'c'
-        SELECT c.* FROM comments c
+        SELECT c.*, COUNT(*) OVER() AS total_count
+
+        FROM comments c
 
         -- join users and alias it to 'u', and join them based on the author_id and id of the users
         JOIN users u ON c.author_id = u.id
@@ -58,6 +60,8 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
         -- now we get every comment where the post_id matches ouer, and with the same username
         -- because a user can comment multiple times
         WHERE c.post_id = ? AND u.username = ?
+
+        LIMIT = ? OFFSET = ?
         """;
 
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(CommentEntity.class), postId, username);

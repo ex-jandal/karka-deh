@@ -35,34 +35,33 @@ public class PostService {
     this.postMapper = postMapper;
   }
 
-  private Page<PostResponse> postsToPageOfPostResponse(
-      Pageable pageable,
-      BiFunction<Integer, Integer, Posts> postFunc) {
-    int page = pageable.getPageNumber();
-    int size = pageable.getPageSize();
-
-    Posts posts = postFunc.apply(page, size);
-
-    int total = posts.getCount();
-
-    List<PostResponse> responses = posts.getPostEntities().stream()
-        .map(this.postMapper::toPostResponse)
-        .toList();
-
-    return new PageImpl<>(responses, pageable, total);
-  }
+  // private Page<PostResponse> postsToPageOfPostResponse(
+  // Pageable pageable,
+  // BiFunction<Integer, Integer, Posts> postFunc) {
+  // int page = pageable.getPageNumber();
+  // int size = pageable.getPageSize();
+  //
+  // Posts posts = postFunc.apply(page, size);
+  //
+  // int total = posts.getCount();
+  //
+  // List<PostResponse> responses = posts.getPostEntities().stream()
+  // .map(this.postMapper::toPostResponse)
+  // .toList();
+  //
+  // return new PageImpl<>(responses, pageable, total);
+  // }
 
   public Page<PostResponse> getAllUserPosts(String username, Pageable pageable) {
     UUID userId = this.userService.getUserId(username)
         .orElseThrow(() -> new UserNotFoundException(username));
 
-    return this.postsToPageOfPostResponse(pageable,
-        (page, size) -> this.postRepo.findAllPostsByUserId(userId, page, size));
+    return this.postRepo.findAllPostsByUserId(userId, pageable).toPage(this.postMapper::toPostResponse);
   }
 
   public Page<PostResponse> searchPost(String username, String keyword, Pageable pageable) {
-    return this.postsToPageOfPostResponse(pageable,
-        (page, size) -> this.postRepo.searchPosts(keyword, page, size));
+    return this.postRepo.searchPosts(keyword, pageable)
+        .toPage(this.postMapper::toPostResponse);
   }
 
   public Optional<PostResponse> findBySlug(String slug) {

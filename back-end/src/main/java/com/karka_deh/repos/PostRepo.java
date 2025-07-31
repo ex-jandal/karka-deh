@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -55,12 +56,10 @@ public class PostRepo extends BaseRepo<PostEntity> {
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), slug).stream().findFirst();
   }
 
-  public List<PostEntity> findAllPostsByUserId(UUID id) {
-    String sql = "SELECT * FROM posts WHERE author_id = ?";
-    return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), id);
-  }
+  public Posts findAllPostsByUserId(UUID id, Pageable pageable) {
+    int size = pageable.getPageSize();
+    int page = pageable.getPageNumber();
 
-  public Posts findAllPostsByUserId(UUID id, int page, int size) {
     int offset = size * page;
 
     String sql = """
@@ -70,11 +69,14 @@ public class PostRepo extends BaseRepo<PostEntity> {
         LIMIT ? OFFSET ?
         """;
     return this.jdbc.query(sql, rs -> {
-      return this.collectPosts(rs);
+      return this.collectPosts(rs, pageable);
     }, id, size, offset);
   }
 
-  public Posts searchPosts(String keyword, int page, int size) {
+  public Posts searchPosts(String keyword, Pageable pageable) {
+    int size = pageable.getPageSize();
+    int page = pageable.getPageNumber();
+
     int offset = size * page;
 
     String sql = """
@@ -88,13 +90,13 @@ public class PostRepo extends BaseRepo<PostEntity> {
     String likeQuery = "%" + keyword.toLowerCase() + "%";
 
     return this.jdbc.query(sql, rs -> {
-      return this.collectPosts(rs);
+      return this.collectPosts(rs, pageable);
 
     }, likeQuery, likeQuery, size, offset);
 
   }
 
-  private Posts collectPosts(ResultSet rs) throws SQLException {
+  private Posts collectPosts(ResultSet rs, Pageable pageable) throws SQLException {
 
     var posts = new ArrayList<PostEntity>();
 
@@ -111,7 +113,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
       }
     }
 
-    return new Posts(totalCount, posts);
+    return new Posts(totalCount, posts, pageable);
   }
 
   @Override
