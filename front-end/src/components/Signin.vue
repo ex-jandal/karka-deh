@@ -1,6 +1,38 @@
 <script>
 export default {
+  data() {
+    return {
+      signinUsername: '',
+      signinPassword: '',
+      signinConformPassword: '',
+    }
+  },
+  methods: {
+    async signin() {
 
+      if (this.signinConformPassword != this.signinPassword) {
+        alert("Not mattched Passwords..\nRewrite your password agine.")
+        return;
+      }
+      const signinResponse = await fetch('http://localhost:8080/auth/signup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: this.signinUsername,
+          password: this.signinPassword,
+        }),
+      });
+
+      if (signinResponse.ok) {
+        this.showLogin;
+        alert('You are sign in..\nYou should login with your accont after reloading the page.');
+        window.location.reload();
+
+      } else {
+        alert('Signin failed');
+      }
+    }
+  },
 }
 </script>
 
@@ -24,7 +56,7 @@ export default {
           </button>
         </div>
 
-        <form class="w-full flex flex-col gap-4" action="" >
+        <form @submit.prevent="signin" class="w-full flex flex-col gap-4" action="" >
 
           <div class="input-feild flex flex-col sm:flex-row gap-4 sm:gap-[2%]">
             <label for="frist-name" class="absolute text-black-100 flex flex-row justify-between
@@ -34,7 +66,7 @@ export default {
             </label>
             <input id="frist-name" class="p-2 pl-10 block rounded-4xl bg-white
               text-black sm:w-[49%]
-              border-2" type="text" required placeholder="frist name"/>
+              border-2" type="text" placeholder="frist name"/>
 
             <label for="last-name" class="absolute text-black-100 flex flex-row justify-between
               items-center text-black bg-transparent px-4
@@ -43,7 +75,7 @@ export default {
             </label>
             <input id="last-name" class="p-2 pl-5 block rounded-4xl bg-white
               text-black sm:w-[49%]
-              border-2" type="text" required placeholder="last name"/>
+              border-2" type="text" placeholder="last name"/>
           </div>
           <div class="input-feild flex flex-col">
             <label for="username" class="absolute text-black-100 flex flex-row justify-between
@@ -51,7 +83,7 @@ export default {
               pt-4">
               <font-awesome-icon :icon="['fas', 'envelope']"/>
             </label>
-            <input id="username" class="p-2 pl-10 block rounded-4xl bg-white text-black
+            <input id="username" v-model="signinUsername" class="p-2 pl-10 block rounded-4xl bg-white text-black
               border-2" type="text" required placeholder="username"/>
           </div>
           <div class="input-feild flex flex-col">
@@ -61,19 +93,27 @@ export default {
               <font-awesome-icon :icon="['fas', 'envelope']"/>
             </label>
             <input id="email" class="p-2 pl-10 block rounded-4xl bg-white text-black
-              border-2" type="email" required placeholder="email"/>
+              border-2" type="email" placeholder="email"/>
           </div>
           <div class="relative input-feild flex flex-col">
             <label for="password" class="absolute flex flex-row justify-between
               items-center text-black px-4 pt-4">
               <font-awesome-icon :icon="['fas', 'lock']"/>
             </label>
-            <input id="password" class="p-2 pl-10 border-2 block rounded-4xl bg-white
+            <input id="password" v-model="signinPassword" class="p-2 pl-10 border-2 block rounded-4xl bg-white
               text-black" type="password" required placeholder="Password"/>
           </div>
+          <div class="relative input-feild flex flex-col">
+            <label for="conform-password" class="absolute flex flex-row justify-between
+              items-center text-black px-4 pt-4">
+              <font-awesome-icon :icon="['fas', 'lock']"/>
+            </label>
+            <input id="conform-password" v-model="signinConformPassword" class="p-2 pl-10 border-2 block rounded-4xl bg-white
+              text-black" type="password" required placeholder="Conform Password"/>
+          </div>
 
-          <input class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
-            hover:scale-105 transition-all" type="submit" value="SignIn">
+          <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
+          hover:scale-105 transition-all" type="submit">Signin</button>
         </form>
         <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2login')"
           type="button">Login</button>

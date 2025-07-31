@@ -1,5 +1,36 @@
 <script>
 export default {
+  data() {
+    return {
+      loginUsername: '',
+      loginPassword: '',
+    }
+  },
+  methods: {
+    async login() {
+      const loginResponse = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: this.loginUsername,
+          password: this.loginPassword,
+        }),
+      });
+
+      const loginData = await loginResponse.json();
+
+      if (loginResponse.ok) {
+        this.$cookies.set('token', loginData.token, '1d')
+        this.$cookies.set('loginUsername', this.loginUsername, '1d')
+        this.$router.push('/articleFeeds');
+        alert('You are logged in');
+        window.location.reload();
+
+      } else {
+        alert('Login failed');
+      }
+    }
+  },
 
 }
 </script>
@@ -22,7 +53,7 @@ export default {
           </button>
         </div>
 
-        <form class="w-full flex flex-col gap-4" action="" >
+        <form @submit.prevent="login" class="w-full flex flex-col gap-4" action="" >
 
           <div class="input-feild flex flex-col">
             <label for="username" class="absolute text-black-100 flex flex-row justify-between
@@ -30,20 +61,20 @@ export default {
               pt-4">
               <font-awesome-icon :icon="['fas', 'envelope']"/>
             </label>
-            <input id="username" class="p-2 pl-10 block rounded-4xl bg-white text-black
-              border-2" type="text" required placeholder="username"/>
+            <input id="username" v-model="loginUsername" class="p-2 pl-10 block rounded-4xl bg-white text-black
+              border-2" type="text"  required placeholder="username"/>
           </div>
           <div class="relative input-feild flex flex-col">
             <label for="password" class="absolute flex flex-row justify-between
               items-center text-black px-4 pt-4">
               <font-awesome-icon :icon="['fas', 'lock']"/>
             </label>
-            <input id="password" class="p-2 pl-10 border-2 block rounded-4xl bg-white
+            <input id="password" v-model="loginPassword" class="p-2 pl-10 border-2 block rounded-4xl bg-white
               text-black" type="password" required placeholder="Password"/>
           </div>
 
-          <input class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
-          hover:scale-105 transition-all" type="submit" value="login">
+          <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
+          hover:scale-105 transition-all" type="submit">Login</button>
         </form>
       <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2signin')" type="button">SignIn</button>
       </div>

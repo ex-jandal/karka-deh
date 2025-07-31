@@ -2,6 +2,7 @@
 export default {
   data() {
     return {
+      username: '',
       barIcons: [
         'barIcons',
         'relative',
@@ -31,6 +32,19 @@ export default {
         'duration-100',
         'absolute',
       ],
+    }
+  },
+  async mounted() {
+    await this.checkUsername();
+  },
+  methods: {
+    async checkUsername() {
+      if (this.$cookies.get('loginUsername')) {
+        this.username = this.$cookies.get('loginUsername');
+        this.$router.push('/articlefeeds')
+      } else {
+        this.username = '';
+      }
     }
   },
 }
@@ -66,7 +80,7 @@ export default {
       </router-link>
     </div>
 
-    <router-link
+    <router-link v-if="username === ''"
       to="/loginScreen"
       class="relative"
     >
@@ -76,6 +90,15 @@ export default {
         <span class="hidden sm:inline">سجل الدخول</span>
       </div>
     </router-link>
+    <div v-else
+      class="relative"
+    >
+      <div class="left-side transition-all shadow-sm flex flex-row justify-center gap-3 items-center
+        m-2 h-16 w-20 sm:w-40 rounded-4xl hover:rounded-3xl hover:scale-105">
+        <font-awesome-icon :icon="['fas', 'user']" />
+        <span class="hidden sm:inline">{{ username }}</span>
+      </div>
+    </div>
   </nav>
 </template>
 <style>
