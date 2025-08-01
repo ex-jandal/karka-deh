@@ -105,6 +105,23 @@ public class PostRepo extends BaseRepo<PostEntity> {
     }, id, size, offset);
   }
 
+  public Posts findAllPosts(Pageable pageable) {
+    int size = pageable.getPageSize();
+    int page = pageable.getPageNumber();
+
+    int offset = size * page;
+
+    String sql = """
+        SELECT *, COUNT(*) OVER() as total_count
+        FROM posts
+        ORDER BY created_at DESC
+        LIMIT ? OFFSET ?
+        """;
+    return this.jdbc.query(sql, rs -> {
+      return this.collectPosts(rs, pageable);
+    }, size, offset);
+  }
+
   public Posts searchPosts(String keyword, Pageable pageable) {
     int size = pageable.getPageSize();
     int page = pageable.getPageNumber();

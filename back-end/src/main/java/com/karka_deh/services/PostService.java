@@ -46,6 +46,10 @@ public class PostService {
     return this.postRepo.findAllPostsByUserId(userId, pageable).toPage(this.postMapper::toPostResponse);
   }
 
+  public Page<PostResponse> getAllPosts(Pageable pageable) {
+    return this.postRepo.findAllPosts(pageable).toPage(this.postMapper::toPostResponse);
+  }
+
   public Page<PostResponse> searchPost(String username, String keyword, Pageable pageable) {
     return this.postRepo.searchPosts(keyword, pageable)
         .toPage(this.postMapper::toPostResponse);
