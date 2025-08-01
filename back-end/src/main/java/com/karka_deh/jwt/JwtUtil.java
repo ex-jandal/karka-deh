@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
@@ -22,7 +23,7 @@ public class JwtUtil {
     return Jwts.builder()
         .setSubject(username)
         .setIssuedAt(new Date())
-        .setExpiration(Date.from(Instant.now().plusSeconds(3600))) // 1 hour
+        .setExpiration(Date.from(Instant.now().plus(7, ChronoUnit.DAYS)))
         .signWith(key)
         .compact();
   }
