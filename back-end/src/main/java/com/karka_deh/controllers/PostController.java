@@ -2,7 +2,6 @@ package com.karka_deh.controllers;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,14 +89,14 @@ public class PostController {
       this endpoint is pageable, meaning you can pass in queries to limit the returned values, for example:
 
         to get only 2 posts
-        GET localhost:8080/post/me?size=2
+        GET http://localhost:8080/posts/me?size=2
 
         or specify the amount of pages, default is 10
-        GET localhost:8080/post/me?page=2
+        GET http://localhost:8080/posts/me?page=2
 
         Usage:
 
-          GET localhost:8080/post/me
+          GET http://localhost:8080/post/me
 
 
         Return:
@@ -147,14 +146,14 @@ public class PostController {
       this endpoint is pageable, meaning you can pass in queries to limit the returned values, for example:
 
         to get only 2 posts
-        GET localhost:8080/post/all?size=2
+        GET http://localhost:8080/posts/all?size=2
 
         or specify the amount of pages, default is 10
-        GET localhost:8080/post/all?page=2
+        GET http://localhost:8080/posts/all?page=2
 
         Usage:
 
-          GET localhost:8080/post/all
+          GET http://localhost:8080/posts/all
 
         Return:
 
@@ -200,14 +199,14 @@ public class PostController {
         this endpoint is pageable, meaning you can pass in queries to limit the returned values, for example:
 
         to get only 2 posts
-        GET localhost:8080/post/search?q=cool?size=2
+        GET http://localhost:8080/posts/search?q=cool?size=2
 
         or specify the amount of pages, default is 10
-        GET localhost:8080/post/search?q=cool?page=2
+        GET http://localhost:8080/posts/search?q=cool?page=2
 
         Usage:
 
-          GET localhost:8080/post/search?q=cool
+          GET http://localhost:8080/posts/search?q=cool
 
         Return:
 
@@ -374,6 +373,7 @@ public class PostController {
 
         Return:
 
+          // all good
           201 => NO_CONTENT
 
           409 => {
