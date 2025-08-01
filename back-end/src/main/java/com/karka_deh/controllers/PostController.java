@@ -53,22 +53,24 @@ public class PostController {
 
       Usage:
 
-        GET http://localhost:8080/posts/first-post-yay
+          GET http://localhost:8080/posts/first-post-yay
 
 
-      200 => {
-            "createdAt": "2025-08-01T18:03:33.94332",
-            "title": "very cool post",
-            "content": "the best post ever",
-            "slug": "very-cool-post"
-        }
+      Return:
 
-      404 => NO_CONTENT
+          200 => {
+                "createdAt": "2025-08-01T18:03:33.94332",
+                "title": "very cool post",
+                "content": "the best post ever",
+                "slug": "very-cool-post"
+            }
 
-      // if the server failed
-      500 => {
-        "message": "THE_REASON_WHY"
-      }
+          404 => NO_CONTENT
+
+          // if the server failed
+          500 => {
+            "error": "THE_REASON_WHY"
+          }
           """)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Found the post", content = {
@@ -94,35 +96,38 @@ public class PostController {
         GET localhost:8080/post/me?page=2
 
         Usage:
+
           GET localhost:8080/post/me
 
 
-        200 => {
-          "content": [
-              {
-                "createdAt": "2025-08-01T18:03:33.94332",
-                "title": "very cool post",
-                "content": "the best post ever",
-                "slug": "very-cool-post"
-              },
-              ...
-          ],
-          "page": {
-              "size": 20,
-              "number": 0,
-              "totalElements": 1,
-              "totalPages": 1
+        Return:
+
+          200 => {
+            "content": [
+                {
+                  "createdAt": "2025-08-01T18:03:33.94332",
+                  "title": "very cool post",
+                  "content": "the best post ever",
+                  "slug": "very-cool-post"
+                },
+                ...
+            ],
+            "page": {
+                "size": 20,
+                "number": 0,
+                "totalElements": 1,
+                "totalPages": 1
+            }
           }
-        }
 
-        404 => {
-          "error": "User not found: USERNAME"
-        }
+          404 => {
+            "error": "User not found: USERNAME"
+          }
 
-        // if the server failed
-        500 => {
-          "message": "THE_REASON_WHY"
-        }
+          // if the server failed
+          500 => {
+            "message": "THE_REASON_WHY"
+          }
 
       """)
   @ApiResponses(value = {
@@ -151,29 +156,31 @@ public class PostController {
 
           GET localhost:8080/post/all
 
-        200 => {
-          "content": [
-              {
-                "createdAt": "2025-08-01T18:03:33.94332",
-                "title": "very cool post",
-                "content": "the best post ever",
-                "slug": "very-cool-post"
-              },
-              ...
-          ],
-          "page": {
-              "size": 20,
-              "number": 0,
-              "totalElements": 1,
-              "totalPages": 1
+        Return:
+
+          200 => {
+            "content": [
+                {
+                  "createdAt": "2025-08-01T18:03:33.94332",
+                  "title": "very cool post",
+                  "content": "the best post ever",
+                  "slug": "very-cool-post"
+                },
+                ...
+            ],
+            "page": {
+                "size": 20,
+                "number": 0,
+                "totalElements": 1,
+                "totalPages": 1
+            }
           }
-        }
 
 
-        // if the server failed
-        500 => {
-          "message": "THE_REASON_WHY"
-        }
+          // if the server failed
+          500 => {
+            "message": "THE_REASON_WHY"
+          }
 
       """)
   @ApiResponses(value = {
@@ -199,35 +206,37 @@ public class PostController {
         GET localhost:8080/post/search?q=cool?page=2
 
         Usage:
+
           GET localhost:8080/post/search?q=cool
 
+        Return:
 
-        200 => {
-          "content": [
-              {
-                "createdAt": "2025-08-01T18:03:33.94332",
-                "title": "very cool post",
-                "content": "the best post ever",
-                "slug": "very-cool-post"
-              },
-              ...
-          ],
-          "page": {
-              "size": 20,
-              "number": 0,
-              "totalElements": 1,
-              "totalPages": 1
+          200 => {
+            "content": [
+                {
+                  "createdAt": "2025-08-01T18:03:33.94332",
+                  "title": "very cool post",
+                  "content": "the best post ever",
+                  "slug": "very-cool-post"
+                },
+                ...
+            ],
+            "page": {
+                "size": 20,
+                "number": 0,
+                "totalElements": 1,
+                "totalPages": 1
+            }
           }
-        }
 
-        400 => {
-          "error": "Bad search query use"
-        }
+          400 => {
+            "error": "Bad search query use"
+          }
 
-        // if the server failed
-        500 => {
-          "error": "THE_REASON_WHY"
-        }
+          // if the server failed
+          500 => {
+            "error": "THE_REASON_WHY"
+          }
       """)
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", content = {
@@ -257,6 +266,7 @@ public class PostController {
         do note that if you update the title, it will also change the slug
 
         Usage:
+
           PUT http://localhost:8080/posts/very-cool-post
 
           {
@@ -310,8 +320,8 @@ public class PostController {
   @Operation(summary = "delete a post", description = """
 
         Usage:
-          DELETE http://localhost:8080/posts/very-cool-post
 
+          DELETE http://localhost:8080/posts/very-cool-post
 
         Return:
 
@@ -353,6 +363,7 @@ public class PostController {
 
   @Operation(summary = "create a new post", description = """
         Usage:
+
           POST http://localhost:8080/posts
 
           {
