@@ -9,17 +9,27 @@ public class CommentResponse {
   @JsonAlias("post_id")
   UUID postId;
 
+  UUID id;
+
   @JsonAlias("author_id")
   UUID authorId;
 
   String content;
 
+  @JsonAlias("created_at")
+  private LocalDateTime createdAt;
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
   public UUID getAuthorId() {
     return authorId;
   }
-
-  @JsonAlias("created_at")
-  private LocalDateTime createdAt;
 
   public LocalDateTime getCreatedAt() {
     return createdAt;

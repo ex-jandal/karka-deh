@@ -1,23 +1,38 @@
 package com.karka_deh.models.responses;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-
-import jakarta.validation.constraints.NotNull;
 
 public class PostResponse {
   @JsonAlias("created_at")
   private LocalDateTime createdAt;
 
-  @NotNull(message = "title is required")
+  @JsonAlias("author_id")
+  private UUID authorId;
+
+  private UUID id;
+
   private String title;
-
-  @NotNull(message = "contnet is required")
   private String content;
-
-  @NotNull(message = "slug is required")
   private String slug;
+
+  public UUID getAuthorId() {
+    return authorId;
+  }
+
+  public void setAuthorId(UUID authorId) {
+    this.authorId = authorId;
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
   public String getSlug() {
     return slug;
