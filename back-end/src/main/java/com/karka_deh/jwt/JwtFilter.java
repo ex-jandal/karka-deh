@@ -10,10 +10,14 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.karka_deh.errors.JwtExpiredException;
+
 import io.jsonwebtoken.Claims;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -40,6 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     if (jwt != null) {
       try {
+
         Claims claims = jwtUtil.parse(jwt).getBody();
 
         var expiration = claims.getExpiration();
@@ -56,13 +61,22 @@ public class JwtFilter extends OncePerRequestFilter {
 
         var authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
-      } catch (JwtException e) {
+      } catch (JwtException | JwtExpiredException e) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        var errorBody = Map.of("error", e.getMessage());
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(errorBody);
+
+        response.getWriter().write(json);
         return;
       }
     }
 
     filterChain.doFilter(request, response);
+
   }
 
   @Override

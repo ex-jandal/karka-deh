@@ -5,11 +5,14 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.karka_deh.errors.JwtExpiredException;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtUtil {
@@ -28,10 +31,15 @@ public class JwtUtil {
         .compact();
   }
 
-  public Jws<Claims> parse(String jwt) {
-    return Jwts.parserBuilder()
-        .setSigningKey(key)
-        .build()
-        .parseClaimsJws(jwt);
+  public Jws<Claims> parse(String jwt) throws JwtExpiredException {
+    try {
+
+      return Jwts.parserBuilder()
+          .setSigningKey(key)
+          .build()
+          .parseClaimsJws(jwt);
+    } catch (io.jsonwebtoken.ExpiredJwtException e) {
+      throw new JwtExpiredException();
+    }
   }
 }
