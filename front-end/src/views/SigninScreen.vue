@@ -11,7 +11,15 @@ export default {
       showLogin: true
     }
   },
+  mounted() {
+    this.isLoggedin();
+  },
   methods: {
+    isLoggedin() {
+      if (this.$cookies.isKey('token')) {
+        this.$router.push('/article-feeds')
+      }
+    },
     switch2signin() {
       this.showLogin = false
     },
@@ -24,11 +32,18 @@ export default {
 </script>
 
 <template>
+
   <div class="login-screen flex flex-col justify-center items-center z-8 w-full
     transition-all
     h-full backdrop-blur-3xl">
-    <Login v-if="showLogin" @switch2signin="switch2signin"/>
-    <Signin v-else @switch2login="switch2login"/>
+    <Transition
+      enter-active-class="transition-opacity duration-700"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+    >
+      <Login v-if="showLogin" @switch2signin="switch2signin"/>
+      <Signin v-else @switch2login="switch2login"/>
+    </Transition>
   </div>
 
 </template>

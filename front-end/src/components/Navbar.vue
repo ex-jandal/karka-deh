@@ -41,7 +41,6 @@ export default {
     async checkUsername() {
       if (this.$cookies.get('loginUsername')) {
         this.username = this.$cookies.get('loginUsername');
-        this.$router.push('/articlefeeds')
       } else {
         this.username = '';
       }
@@ -68,13 +67,13 @@ export default {
       </router-link>
       <router-link
         :class="barIcons"
-        to="/articleFeeds"
+        to="/article-feeds"
       >
         <font-awesome-icon :icon="['fas', 'lines-leaning']" /><span :class="iconContext">مقالات</span>
       </router-link>
       <router-link
         :class="barIcons"
-        to="/ff"
+        to="/me"
       >
         <font-awesome-icon :icon="['fas', 'newspaper']" /><span :class="iconContext">أخبار</span>
       </router-link>
@@ -117,7 +116,7 @@ nav {
   color: var(--forth-color);
 }
 
-.barIcons.router-link-exact-active {
+.barIcons.router-link-active {
   color: var(--main-color);
   background-color: var(--therd-color);
 }

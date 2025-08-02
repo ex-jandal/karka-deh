@@ -7,6 +7,16 @@ export default {
       usersAmount: 50,
     }
   },
+  async mounted() {
+    await this.checkUsername();
+  },
+  methods: {
+    async checkUsername() {
+      if (this.$cookies.get('loginUsername')) {
+        this.$router.push('/article-feeds')
+      }
+    }
+  },
 }
 </script>
 
@@ -63,13 +73,14 @@ export default {
       <div class="direct-user flex flex-row justify-evenly items-center grow-1 transition-all group">
         <router-link
           class="bg-white text-amber-500 p-5 flex flex-row transition-all group-hover:bg-amber-500 group-hover:text-white justify-center items-center w-full h-full rounded-4xl"
-          to="/articleFeeds"
+          to="/article-feeds"
         >
           <p class="grow-3 flex flex-row justify-center">مقالات</p>
-          <font-awesome-icon
-            class="grow-1 rounded-4xl py-9 px-5 group-hover:text-amber-500 group-hover:bg-white text-lg text-white bg-amber-500 transition-all"
-            :icon="['fas', 'circle-left']"
-          />
+          <div class="grow-1 rounded-4xl flex justify-center items-center h-full px-5 group-hover:text-amber-500 group-hover:bg-white text-lg text-white bg-amber-500 transition-all">
+            <font-awesome-icon
+              :icon="['fas', 'circle-left']"
+            />
+          </div>
         </router-link>
       </div>
     </div>

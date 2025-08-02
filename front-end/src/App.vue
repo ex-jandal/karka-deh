@@ -1,9 +1,3 @@
-<script setup>
-
-$cookies.set('test', 'one cup of tea', '1h')
-console.log($cookies.get('test'))
-
-</script>
 <script>
 import Navbar from './components/Navbar.vue'
 import LoginScreen from './views/SigninScreen.vue'
@@ -24,9 +18,17 @@ export default {
 
 <template>
   <Navbar />
-  <div class="main">
-    <router-view></router-view>
-  </div>
+    <div class="main">
+      <router-view v-slot="{ Component }">
+        <Transition
+          enter-active-class="transition-opacity duration-700"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+        >
+          <component :is="Component" />
+        </Transition>
+      </router-view>
+    </div>
 </template>
 
 <style>
@@ -55,5 +57,14 @@ body {
   /*   box-shadow: 0px 0px 10px black inset; */
   /* border: 1px solid black; */
   /*   border-radius: 20px; */
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease 0.3s; /* 0.3s delay */
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
 }
 </style>

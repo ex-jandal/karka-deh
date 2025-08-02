@@ -21,9 +21,8 @@ export default {
       const loginData = await loginResponse.json();
 
       if (loginResponse.ok) {
-        this.$cookies.set('token', loginData.token, '1d')
+        this.$cookies.set('token', loginData.token, '7d')
         this.$cookies.set('loginUsername', this.loginUsername, '1d')
-        this.$router.push('/articleFeeds');
         this.loginMessage = 'Logged in successfuly';
         window.location.reload();
 
