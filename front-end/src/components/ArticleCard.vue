@@ -38,10 +38,11 @@ export default {
     overflow-hidden hover:bg-[#976c69] hover:border-0 hover:scale-102 transition-all">
     <img class="overflow-hidden w-40 p-2 " :src="articleCover" alt="article cover">
 
-    <div class="article-text p-4">
-      <h3 class="text-white text-2xl">{{ articleTitle }}</h3>
-      <p v-html="articleDescription" class="article-description h-5 w-40 overflow-hidden"></p>
-      <span class="article-date">{{ articleDate }}</span>
+    <div class="article-text p-4 h-full w-full flex flex-col justify-center overflow-hidden">
+      <h3 class="text-white text-2xl overflow-hidden">{{ articleTitle }}</h3>
+      <p v-html="articleDescription" class="article-description h-5 overflow-hidden"></p>
+      <span class="article-date">{{ `${new Date(articleDate).getFullYear()}/${new Date(articleDate).getMonth()}/${new Date(articleDate).getDay()}` }}</span>
+
     </div>
   </router-link>
 
