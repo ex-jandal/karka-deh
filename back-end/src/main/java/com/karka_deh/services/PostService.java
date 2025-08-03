@@ -128,7 +128,7 @@ public class PostService {
     String lower = normalized.toLowerCase();
 
     // replace all non-alphanumeric with hyphens
-    String hyphenated = lower.replaceAll("[^a-z0-9]+", "-");
+    String hyphenated = lower.replaceAll("[^\\p{IsArabic}a-z0-9]+", "-");
 
     // remove leading/trailing hyphens
     String cleaned = hyphenated.replaceAll("^-+|-+$", "");
