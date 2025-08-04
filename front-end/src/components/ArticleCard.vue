@@ -1,14 +1,5 @@
-<script>
-export default {
-  // data() {
-  //   return {
-  //     articleCover: '../assets/logo.png',
-  //     articleTitle: 'عنوان',
-  //     articleDescription: 'هنا وصف عن المقالة',
-  //     articleDate: '2000/2/2',
-  //   }
-  // },
-  props: {
+<script setup lang="ts">
+  const props = defineProps({
     articleCover: {
       type: String,
       required: true
@@ -28,8 +19,7 @@ export default {
     articleSlug: {
       type: String
     }
-  }
-}
+  });
 </script>
 
 <template>

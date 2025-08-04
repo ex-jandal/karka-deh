@@ -1,37 +1,37 @@
-<script>
-export default {
-  data() {
-    return {
-      loginUsername: '',
-      loginPassword: '',
-      loginMessage: '',
-    }
-  },
-  methods: {
-    async login() {
-      const loginResponse = await fetch('http://localhost:8080/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: this.loginUsername,
-          password: this.loginPassword,
-        }),
-      });
+<script setup lang="ts">
+import { ref, inject } from 'vue';
+import { useRouter } from 'vue-router';
+import { useVueCookies } from '../components/Cookies';
 
-      const loginData = await loginResponse.json();
+let cookies = useVueCookies();
+const router = useRouter();
 
-      if (loginResponse.ok) {
-        this.$cookies.set('token', loginData.token, '7d')
-        this.$cookies.set('loginUsername', this.loginUsername, '1d')
-        this.loginMessage = 'Logged in successfuly';
-        window.location.reload();
+const loginUsername = ref<string>('');
+const loginPassword = ref<string>('');
+let loginMessage = ref<string>('');
 
-      } else {
-        this.loginMessage = 'Wrong username or Password';
-      }
-    }
-  },
+async function login() {
+  const loginResponse = await fetch('http://localhost:8080/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      username: loginUsername.value,
+      password: loginPassword.value,
+    }),
+  });
 
+  const loginData = await loginResponse.json();
+
+  if (loginResponse.ok) {
+    cookies.set('token', loginData.token, '7d');
+    cookies.set('loginUsername', loginUsername.value, '7d');
+    loginMessage.value = 'Logged in successfuly';
+    router.push('/article-feeds');
+    window.location.reload();
+
+  } else {
+    loginMessage.value = 'Wrong username or Password';
+  }
 }
 </script>
 
@@ -39,7 +39,8 @@ export default {
     <div class="login-section h-screen w-screen sm:w-120 sm:h-190 flex flex-col
       justify-center items-center sm:rounded-4xl">
       <font-awesome-icon class="text-5xl grow" :icon="['fas', 'right-to-bracket']"/>
-      <div class="login-form p-10 rounded-4xl flex flex-col gap-7 items-center justify-between h-110">
+      <div class="login-form bg-fifth-color p-10 rounded-4xl flex flex-col gap-7
+      items-center justify-between w-110 h-110">
 
         <div class="login-oauth border-b-1 border-gray-300 pb-5 p-1 flex flex-row
           justify-center-safe gap-20 w-full text-3xl">
@@ -73,8 +74,8 @@ export default {
               text-black" type="password" required placeholder="Password"/>
           </div>
 
-          <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
-          hover:scale-105 transition-all" type="submit">Login</button>
+          <button class="submit bg-third-color cursor-pointer p-2 block rounded-4xl hover:rounded-xl
+          hover:scale-105 hover:bg-fourth-color hover:text-third-color transition-all" type="submit">Login</button>
         </form>
       <span class="text-red-900">{{ loginMessage }}</span>
       <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2signin')" type="button">SignIn</button>
@@ -85,20 +86,7 @@ export default {
 </template>
 
 <style>
-/* .login-section { */
-/*   background-color: var(--main-color); */
-/* } */
-
 .login-form {
-  background-color: var(--fifth-color);
-  width: calc(100% - 50px);
   direction: ltr;
-}
-.submit {
-  background-color: var(--therd-color);
-}
-.submit:hover {
-  background-color: var(--forth-color);
-  color: var(--therd-color);
 }
 </style>

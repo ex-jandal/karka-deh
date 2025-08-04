@@ -1,50 +1,43 @@
-<script>
-export default {
-  data() {
-    return {
-      signinUsername: '',
-      signinPassword: '',
-      signinConformPassword: '',
-      signinMessage: '',
-    }
-  },
-  methods: {
-    async signin() {
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 
-      if (this.signinConformPassword != this.signinPassword) {
-        this.signinMessage = "Not mattched Passwords.. Rewrite your password agine.";
-        return;
-      }
-      const signinResponse = await fetch('http://localhost:8080/auth/signup', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: this.signinUsername,
-          password: this.signinPassword,
-        }),
-      });
+const signinUsername = ref<string>('');
+const signinPassword = ref<string>('');
+const signinConformPassword = ref<string>('')
+const signinMessage = ref<string>('');
 
-      if (signinResponse.ok) {
-        this.showLogin;
-        this.signinMessage = 'Sign in successfuly..\nYou will be redirect after 5 seconed to login page';
-        await new Promise(reslove => setTimeout(reslove, 5000))
-        window.location.reload();
+async function signin() {
 
-      } else {
-        this.signinMessage = 'Signin failed.. You have entered a used username';
-      }
-    }
-  },
+  if (signinConformPassword.value != signinPassword.value) {
+    signinMessage.value = "Not mattched Passwords.. Rewrite your password agine.";
+    return;
+  }
+  const signinResponse = await fetch('http://localhost:8080/auth/signup', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      username: signinUsername.value,
+      password: signinPassword.value,
+    }),
+  });
+
+  if (signinResponse.ok) {
+    signinMessage.value = 'Sign in successfuly..\nYou will be redirect after 5 seconed to login page';
+    await new Promise(reslove => setTimeout(reslove, 5000))
+    window.location.reload();
+
+  } else {
+    signinMessage.value = 'Signin failed.. You have entered a used username';
+  }
 }
 </script>
 
 <template>
-<div>
-
-    <div class="login-section pb-[25px] h-screen w-screen sm:w-140 sm:h-220 flex flex-col
+  <div>
+    <div class="login-section h-screen w-full sm:w-140 sm:h-220 flex flex-col
       justify-center items-center sm:rounded-4xl">
       <font-awesome-icon class="text-5xl grow" :icon="['fas', 'user']"/>
-      <div class="login-form p-10 rounded-4xl flex flex-col gap-10 items-center ">
+      <div class="login-form bg-fifth-color p-10 rounded-4xl flex flex-col gap-10 items-center ">
 
         <div class="login-oauth border-b-1 border-gray-300 pb-5 p-1 flex flex-row
           justify-center-safe gap-20 w-full text-3xl">
@@ -114,18 +107,13 @@ export default {
               text-black" type="password" required placeholder="Conform Password"/>
           </div>
 
-          <button class="submit cursor-pointer p-2 block rounded-4xl hover:rounded-xl
-          hover:scale-105 transition-all" type="submit">Signin</button>
+          <button class="submit bg-third-color text-fourth-color cursor-pointer p-2 block rounded-4xl hover:rounded-xl
+          hover:scale-105 hover:bg-fourth-color hover:text-third-color transition-all" type="submit">Signin</button>
         </form>
         <span class="text-red-900">{{ signinMessage }}</span>
         <button class="cursor-pointer underline text-gray-200" @click="$emit('switch2login')"
           type="button">Login</button>
       </div>
-
     </div>
   </div>
 </template>
-
-<style>
-
-</style>

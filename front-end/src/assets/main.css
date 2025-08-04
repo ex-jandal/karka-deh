@@ -1,1 +1,46 @@
 @import 'tailwindcss';
+
+@theme {
+  /* main fonts */
+  --font-title: 'oi'; /* oi */
+  --font-main: 'Playpen Sans Arabic', cursive; /* Playpen Sans Arabic */
+  --width-body-size: 1024px; /* 1024px */
+
+  /* main colors */
+  --color-main-color: #460809;
+  --color-second-color: #6a1a19;
+  --color-third-color: #eebf11;
+  --color-fourth-color: #f6f6f5;
+  --color-fifth-color: #976c69;
+
+  /* Gruvbox Dark Background */
+  --color-gruvbox-dark0: #282828;
+  --color-gruvbox-dark1: #3c3836;
+  --color-gruvbox-dark2: #504945;
+  --color-gruvbox-dark3: #665c54;
+  --color-gruvbox-dark4: #7c6f64;
+
+  /* Gruvbox Light Background */
+  --color-gruvbox-light0: #fbf1c7;
+  --color-gruvbox-light1: #ebdbb2;
+  --color-gruvbox-light2: #d5c4a1;
+  --color-gruvbox-light3: #bdae93;
+  --color-gruvbox-light4: #a89984;
+
+  /* Gruvbox Colors */
+  --color-gruvbox-gray: #928374;
+  --color-gruvbox-red: #cc241d;
+  --color-gruvbox-bright-red: #fb4934;
+  --color-gruvbox-green: #98971a;
+  --color-gruvbox-bright-green: #b8bb26;
+  --color-gruvbox-yellow: #d79921;
+  --color-gruvbox-bright-yellow: #fabd2f;
+  --color-gruvbox-blue: #458588;
+  --color-gruvbox-bright-blue: #83a598;
+  --color-gruvbox-purple: #b16286;
+  --color-gruvbox-bright-purple: #d3869b;
+  --color-gruvbox-aqua: #689d6a;
+  --color-gruvbox-bright-aqua: #8ec07c;
+  --color-gruvbox-orange: #d65d0e;
+  --color-gruvbox-bright-orange: #fe8019;
+}

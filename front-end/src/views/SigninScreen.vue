@@ -1,34 +1,34 @@
-<script>
+<script setup lang="ts">
 import Login from '../components/Login.vue'
 import Signin from '@/components/Signin.vue'
-export default {
-  components: {
-    Login,
-    Signin,
-  },
-  data() {
-    return {
-      showLogin: true
-    }
-  },
-  mounted() {
-    this.isLoggedin();
-  },
-  methods: {
-    isLoggedin() {
-      if (this.$cookies.isKey('token')) {
-        this.$router.push('/article-feeds')
-      }
-    },
-    switch2signin() {
-      this.showLogin = false
-    },
-    switch2login() {
-      this.showLogin = true
-    },
-  }
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useVueCookies } from '../components/Cookies';
 
+const cookies = useVueCookies();
+const router = useRouter();
+
+const showLogin = ref<Boolean>(true);
+
+function isLoggedin() {
+  try {
+    if (cookies.isKey('token')) {
+      router.push('/article-feeds')
+    }
+  } catch {
+    console.log("Not LoggedIn")
+  }
 }
+function switch2signin() {
+  showLogin.value = false
+}
+function switch2login() {
+  showLogin.value = true
+}
+
+onMounted(() => {
+  isLoggedin();
+})
 </script>
 
 <template>
@@ -37,9 +37,11 @@ export default {
     transition-all
     h-full backdrop-blur-3xl">
     <Transition
-      enter-active-class="transition-opacity duration-700"
-      enter-from-class="opacity-0"
+      enter-active-class="transition-all duration-400"
+      enter-from-class="opacity-0 "
       enter-to-class="opacity-100"
+      leave-active-class="duration-300"
+      leave-to-class="opacity-0 translate-y-8"
     >
       <Login v-if="showLogin" @switch2signin="switch2signin"/>
       <Signin v-else @switch2login="switch2login"/>
@@ -47,18 +49,3 @@ export default {
   </div>
 
 </template>
-
-<style>
-/* .login-screen::before { */
-/*   content: ''; */
-/*   position: absolute; */
-/*   top: 0; */
-/*   right: 0; */
-/*   z-index: -1; */
-/*   height: 100vh; */
-/*   width: 100vw; */
-/*   opacity: 65%; */
-/*   backdrop-filter: blur(2000px); */
-/*   background-color: black; */
-/* } */
-</style>

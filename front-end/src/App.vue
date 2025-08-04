@@ -1,70 +1,36 @@
-<script>
-import Navbar from './components/Navbar.vue'
-import LoginScreen from './views/SigninScreen.vue'
+<script setup lang="ts">
+import Navbar from '@/components/Navbar.vue'
 
-document.documentElement.lang='ar'
-document.documentElement.dir='rtl'
-
-export default {
-  components: {
-    Navbar,
-    LoginScreen,
-  },
-  methods() {
-  }
-
-}
+document.documentElement.lang = 'ar'
+document.documentElement.dir = 'rtl'
 </script>
 
 <template>
   <Navbar />
-    <div class="main">
-      <router-view v-slot="{ Component }">
-        <Transition
-          enter-active-class="transition-opacity duration-700"
-          enter-from-class="opacity-0"
-          enter-to-class="opacity-100"
-        >
-          <component :is="Component" />
-        </Transition>
-      </router-view>
-    </div>
+  <div class="main text-fourth-color mt-23 px-5 mb-50 mx-auto">
+    <router-view v-slot="{ Component }">
+      <transition
+        mode="out-in"
+        enter-active-class="transition-all duration-400"
+        enter-from-class="opacity-0"
+        enter-to-class=" opacity-100"
+        leave-active-class="duration-300"
+        leave-to-class="opacity-0 translate-y-8"
+      >
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oi&family=Playpen+Sans+Arabic:wght@100..800&display=swap');
-:root {
-  --main-color: #460809;
-  --second-color: #6a1a19;
-  --therd-color: #eebf11;
-  --forth-color: #f6f6f5;
-  --fifth-color: #976c69;
-  --main-font: 'Playpen Sans Arabic', cursive;
-  --title-font: 'oi';
-}
-
 body {
-  font-family: var(--main-font);
+  font-family: var(--font-main);
+  background-color: var(--color-second-color);
+  transition: all ease-out;
 }
-
 .main {
-  height: calc(100vh - 10px);
-  margin: auto;
-  max-width: 1024px;
-  margin-top: 85px;
-  /* color: white; */
-  /*   background-color: white; */
-  /*   box-shadow: 0px 0px 10px black inset; */
-  /* border: 1px solid black; */
-  /*   border-radius: 20px; */
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s ease 0.3s; /* 0.3s delay */
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: scale(0.9);
+  max-width: var(--width-body-size);
 }
 </style>
