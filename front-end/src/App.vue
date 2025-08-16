@@ -7,7 +7,7 @@ document.documentElement.dir = 'rtl'
 
 <template>
   <Navbar />
-  <div class="main text-fourth-color mt-23 px-5 mb-50 mx-auto">
+  <div class="main text-fourth-color pt-23 px-10 mx-auto">
     <router-view v-slot="{ Component }">
       <transition
         mode="out-in"
@@ -28,7 +28,6 @@ document.documentElement.dir = 'rtl'
 body {
   font-family: var(--font-main);
   background-color: var(--color-second-color);
-  transition: all ease-out;
 }
 .main {
   max-width: var(--width-body-size);

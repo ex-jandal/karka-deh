@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Login from '../components/Login.vue'
 import Signin from '@/components/Signin.vue'
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useVueCookies } from '../components/Cookies';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useVueCookies } from '../components/Cookies'
 
-const cookies = useVueCookies();
-const router = useRouter();
+const cookies = useVueCookies()
+const router = useRouter()
 
-const showLogin = ref<Boolean>(true);
+const showLogin = ref<Boolean>(true)
 
 function isLoggedin() {
   try {
@@ -16,7 +16,7 @@ function isLoggedin() {
       router.push('/article-feeds')
     }
   } catch {
-    console.log("Not LoggedIn")
+    console.log('Not LoggedIn')
   }
 }
 function switch2signin() {
@@ -27,25 +27,22 @@ function switch2login() {
 }
 
 onMounted(() => {
-  isLoggedin();
+  isLoggedin()
 })
 </script>
 
 <template>
-
-  <div class="login-screen flex flex-col justify-center items-center z-8 w-full
-    transition-all
-    h-full backdrop-blur-3xl">
-    <Transition
+  <div class="flex flex-col justify-center items-center">
+    <transition
+      mode="out-in"
       enter-active-class="transition-all duration-400"
-      enter-from-class="opacity-0 "
-      enter-to-class="opacity-100"
+      enter-from-class="opacity-0"
+      enter-to-class=" opacity-100"
       leave-active-class="duration-300"
       leave-to-class="opacity-0 translate-y-8"
     >
-      <Login v-if="showLogin" @switch2signin="switch2signin"/>
-      <Signin v-else @switch2login="switch2login"/>
-    </Transition>
+      <Login v-if="showLogin" @switch2signin="switch2signin" />
+      <Signin v-else @switch2login="switch2login" />
+    </transition>
   </div>
-
 </template>
