@@ -3,6 +3,7 @@ import Spiner from '@/components/Spiner.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useVueCookies } from '../components/Cookies'
+// import hljs from 'highlight.js'
 
 const cookies = useVueCookies()
 
@@ -71,5 +72,69 @@ onMounted(() => {
   padding-top: 20px;
   font-size: var(--text-xl);
   font-weight: bold;
+}
+
+.article-content pre {
+  position: relative;
+  direction: ltr;
+  padding: 20px;
+  padding-top: 45px;
+  margin: 10px 0px 20px;
+  background-color: var(--color-gruvbox-dark0);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.article-content pre:after {
+  content: "</>";
+  direction: rtl;
+  /* font-family: var(--font-main); */
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 15px ;
+  width: 100%;
+  height: 30px;
+  background-image: linear-gradient(var(--color-gruvbox-green), var(--color-gruvbox-bright-green));
+}
+.article-content ol {
+  margin: 0 50px 20px 0;
+  list-style: decimal;
+}
+.article-content ul {
+  margin: 0 50px 20px 0;
+  list-style: disc;
+}
+.article-content blockquote {
+  position: relative;
+  /* quotes: "'" "'" "'" "'"; */
+  font-style: italic;
+  /* text-align: center; */
+  background-color: var(--color-gruvbox-dark1);
+  padding: 15px 65px;
+  /* padding-top: 40px; */
+  margin: 10px 0px 20px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.article-content blockquote:after {
+  content: '"';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-style: normal;
+  font-size: 32px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 20px 12px 0;
+  width: 40px;
+  height: 100%;
+  background-image: linear-gradient(var(--color-gruvbox-blue), var(--color-gruvbox-bright-blue));
 }
 </style>
