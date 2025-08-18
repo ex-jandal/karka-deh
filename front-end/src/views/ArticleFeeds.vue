@@ -30,22 +30,25 @@ const postsData = ref<PostsData>({
   content: [],
   page: [],
 })
-onMounted(async () => {
-  try {
-    const data = await fetch('http://localhost:8080/posts/all', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${cookies.get('token')}`,
-      },
+onMounted(() => {
+  // let data =
+  fetch('http://localhost:8080/posts/all', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${cookies.get('token')}`,
+    },
+  }).then((dataResponse) => dataResponse.json())
+    .catch((error) => {
+      notSignedIn.value = false
+      console.error(`not logged in: ${error}`)
     })
-    postsData.value = await data.json()
-    await new Promise((reslove) => setTimeout(reslove, 1000))
+    .then((dataJson) => {
+      postsData.value = dataJson
+  });
+  new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
     loading.value = false
-  } catch {
-    notSignedIn.value = false
-    console.error('not logged in')
-  }
+  })
 })
 </script>
 
