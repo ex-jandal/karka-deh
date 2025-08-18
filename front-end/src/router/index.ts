@@ -60,18 +60,25 @@ const router = createRouter({
     },
     {
       path: '/me',
+      beforeEnter() {
+        if (!isLoggedIn()) {
+          router.push('/login-screen')
+        }
+      },
       children: [
         {
           path: '',
           name: 'userPage',
           component: () => import('../views/UserInfo.vue'),
-          // beforeEnter() {
-          //   router.push('/me/articles')
-          // },
         },
         {
           path: 'articles',
           name: 'userArticle',
+          component: () => import('../views/UserInfo.vue'),
+        },
+        {
+          path: 'videos',
+          name: 'userVideos',
           component: () => import('../views/UserInfo.vue'),
         },
       ],

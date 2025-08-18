@@ -48,7 +48,7 @@ onMounted(() => {
     v-if="notFound"
     class="fixed top-0 right-0 h-screen w-screen flex flex-col gap-5 justify-center items-center text-2xl text-gray-400 font-bold"
   >
-    <font-awesome-icon :icon="['fas', 'heart-crack']" class="text-5xl animate-pulse" />
+    <font-awesome-icon :icon="['fas', 'heart-crack']" class="text-7xl animate-pulse" />
     <p class="">للأســـف.. المقال غير موجود.</p>
   </div>
 

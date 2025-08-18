@@ -11,6 +11,11 @@ const MONACO_EDITOR_OPTIONS = {
   formatOnType: true,
   formatOnPaste: true,
   fontSize: 18,
+  padding: {
+    top: 15,
+  },
+  wordWrap: "on",
+  wrappingIndent: "same",
 }
 const editor = shallowRef()
 
