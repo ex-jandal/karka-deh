@@ -54,7 +54,7 @@ onMounted(() => {
 
   <Spiner v-else-if="loading" />
 
-  <section v-else class="article pt-20 flex flex-col justify-center">
+  <section v-else class="article pt-20 pb-50 flex flex-col justify-center">
     <h2 class="text-6xl bold pb-3 leading-18">{{ title }}</h2>
     <span class="text-gray-400 pb-2 border-b-1 mb-4 border-white">{{ createdAt }}</span>
     <div class="article-content pt-5 flex flex-col gap-1" v-html="content"></div>
@@ -62,7 +62,8 @@ onMounted(() => {
 </template>
 
 <style>
-.article-content h2 {
+.article-content h2,
+.article-content h1 {
   padding-top: 20px;
   font-size: var(--text-2xl);
   font-weight: bold;
@@ -72,6 +73,11 @@ onMounted(() => {
   padding-top: 20px;
   font-size: var(--text-xl);
   font-weight: bold;
+}
+
+.article-content p {
+  padding-bottom: 20px;
+  padding-right: 10px;
 }
 
 .article-content pre {

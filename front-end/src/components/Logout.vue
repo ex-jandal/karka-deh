@@ -27,7 +27,7 @@ function logout(): void {
       class="absolute top-0 right-0 h-screen w-screen z-[-1]"
     >
     </button>
-    <div class="bg-second-color p-7 pt-0 h-70 w-[70%] rounded-4xl flex flex-col">
+    <div class="bg-second-color p-7 pt-0 m-7 h-70 w-100 md:w-150 rounded-4xl flex flex-col">
       <div class="h-[80%] text-gray-400 flex flex-col items-center justify-evenly">
         <font-awesome-icon class="text-5xl" :icon="['fas', 'warning']"/>
         <p class="text-center text-sm sm:text-lg">
