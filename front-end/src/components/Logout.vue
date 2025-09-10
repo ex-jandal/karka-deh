@@ -5,7 +5,7 @@ import { useVueCookies } from '../components/Cookies'
 const cookies = useVueCookies();
 
 const emit = defineEmits<{
-  (closeLogout: 'close')
+  (event: 'close'): void
 }>()
 
 function closeLogout() {

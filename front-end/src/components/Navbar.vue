@@ -4,7 +4,7 @@ import { useVueCookies } from '../components/Cookies'
 
 const cookies = useVueCookies()
 
-const username = ref<string>(null)
+const username = ref<string>("")
 const barIcons = ref<object>([
   'barIcons',
   'bg-second-color',
@@ -79,7 +79,7 @@ onMounted(() => {
       </router-link>
     </div>
 
-    <router-link v-if="username === null" to="/login-screen" class="relative">
+    <router-link v-if="username === ''" to="/login-screen" class="relative">
       <div
         class="left-side bg-third-color text-fourth-color transition-all shadow-lg flex flex-row justify-center gap-3 items-center m-2 h-16 w-20 sm:w-40 rounded-4xl hover:bg-fourth-color hover:text-third-color hover:rounded-3xl hover:scale-105"
       >
