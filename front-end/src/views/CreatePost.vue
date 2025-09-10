@@ -6,7 +6,8 @@ import { useVueCookies } from '../components/Cookies';
 import { useRouter } from 'vue-router';
 
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
-const MONACO_EDITOR_OPTIONS = {
+import * as monaco from "monaco-editor";
+const MONACO_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
   // automaticLayout: true,
   formatOnType: true,
   formatOnPaste: true,

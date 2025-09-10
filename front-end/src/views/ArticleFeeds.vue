@@ -13,7 +13,7 @@ const loading = ref<Boolean>(true)
 
 interface PostsData {
   content: {
-    createdAt: Date
+    createdAt: string
     autherId: string
     title: string
     content: string
@@ -94,7 +94,7 @@ onMounted(() => {
       <div class="flex flex-row justify-center flex-wrap gap-5">
         <ArticleCard
           v-for="article in postsData.content"
-          :key="article.id"
+          :key="article.autherId"
           :articleCover="articleCover"
           :articleTitle="article.title"
           :articleDescription="article.content"

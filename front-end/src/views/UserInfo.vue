@@ -14,7 +14,7 @@ const wantToLogOut = ref<boolean>();
 
 interface PostsData {
   content: {
-    createdAt: Date
+    createdAt: string
     title: string
     content: string
     slug: string
@@ -127,7 +127,7 @@ onMounted(async () => {
           class="flex flex-row justify-center flex-wrap gap-5">
           <ArticleCard
             v-for="article in postsData.content"
-            :key="article.id"
+            :key="article.slug"
             :articleCover="articleCover"
             :articleTitle="article.title"
             :articleDescription="article.content"
