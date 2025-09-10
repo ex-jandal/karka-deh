@@ -25,7 +25,7 @@ import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.CommentEntity;
 import com.karka_deh.models.entities.PostEntity;
-import com.karka_deh.models.repo_find.Comments;
+import com.karka_deh.models.repo_find.Entry;
 
 @Repository
 @DependsOn("postRepo")
@@ -54,7 +54,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
 
   }
 
-  public Comments getUserPostComments(String slug, String username, Pageable pageable) {
+  public Entry<CommentEntity> getUserPostComments(String slug, String username, Pageable pageable) {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
 
     int size = pageable.getPageSize();
@@ -83,7 +83,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
     }, postId, username, size, offset);
   }
 
-  public Comments getAllPostComments(String slug, Pageable pageable) {
+  public Entry<CommentEntity> getAllPostComments(String slug, Pageable pageable) {
     UUID postId = this.postRepo.findPostIdBySlug(slug).orElseThrow(() -> new SlugNotFoundException(slug));
 
     String sql = """
@@ -97,7 +97,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
     }, postId);
   }
 
-  private Comments collectComments(ResultSet rs, Pageable pageable) throws SQLException {
+  private Entry<CommentEntity> collectComments(ResultSet rs, Pageable pageable) throws SQLException {
 
     var posts = new ArrayList<CommentEntity>();
 
@@ -114,7 +114,7 @@ public class CommentRepo extends BaseRepo<CommentEntity> {
       }
     }
 
-    return new Comments(totalCount, posts, pageable);
+    return new Entry<>(totalCount, posts, pageable);
   }
 
   @Override

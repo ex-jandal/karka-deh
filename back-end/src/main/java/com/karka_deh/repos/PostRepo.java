@@ -4,7 +4,7 @@ import com.karka_deh.models.db.Column;
 import com.karka_deh.models.db.StandaloneConstraint;
 import com.karka_deh.models.db.TableElement;
 import com.karka_deh.models.entities.PostEntity;
-import com.karka_deh.models.repo_find.Posts;
+import com.karka_deh.models.repo_find.Entry;
 import com.karka_deh.models.requests.PostRequest;
 
 import java.sql.Connection;
@@ -88,7 +88,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
     return this.jdbc.query(sql, new BeanPropertyRowMapper<>(PostEntity.class), slug).stream().findFirst();
   }
 
-  public Posts findAllPostsByUserId(UUID id, Pageable pageable) {
+  public Entry<PostEntity> findAllPostsByUserId(UUID id, Pageable pageable) {
     int size = pageable.getPageSize();
     int page = pageable.getPageNumber();
 
@@ -105,7 +105,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
     }, id, size, offset);
   }
 
-  public Posts findAllPosts(Pageable pageable) {
+  public Entry<PostEntity> findAllPosts(Pageable pageable) {
     int size = pageable.getPageSize();
     int page = pageable.getPageNumber();
 
@@ -122,7 +122,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
     }, size, offset);
   }
 
-  public Posts searchPosts(String keyword, Pageable pageable) {
+  public Entry<PostEntity> searchPosts(String keyword, Pageable pageable) {
     int size = pageable.getPageSize();
     int page = pageable.getPageNumber();
 
@@ -145,7 +145,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
 
   }
 
-  private Posts collectPosts(ResultSet rs, Pageable pageable) throws SQLException {
+  private Entry<PostEntity> collectPosts(ResultSet rs, Pageable pageable) throws SQLException {
 
     var posts = new ArrayList<PostEntity>();
 
@@ -162,7 +162,7 @@ public class PostRepo extends BaseRepo<PostEntity> {
       }
     }
 
-    return new Posts(totalCount, posts, pageable);
+    return new Entry<>(totalCount, posts, pageable);
   }
 
   @Override

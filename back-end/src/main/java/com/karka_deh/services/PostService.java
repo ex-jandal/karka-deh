@@ -20,7 +20,7 @@ import com.karka_deh.errors.SlugAlreadExistsException;
 import com.karka_deh.errors.SlugNotFoundException;
 import com.karka_deh.errors.UserNotFoundException;
 import com.karka_deh.models.mappers.PostMapper;
-import com.karka_deh.models.repo_find.Posts;
+import com.karka_deh.models.repo_find.Entry;
 import com.karka_deh.models.requests.PostRequest;
 import com.karka_deh.models.responses.PostResponse;
 import com.karka_deh.repos.PostRepo;

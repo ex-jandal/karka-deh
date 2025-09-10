@@ -10,17 +10,17 @@ import org.springframework.data.domain.Pageable;
 
 import com.karka_deh.models.entities.PostEntity;
 
-public class Posts {
+public class Entry<E> {
 
   private int count;
 
-  private List<PostEntity> postEntities;
+  private List<E> entities;
 
   private Pageable pageable;
 
-  public Posts(int count, List<PostEntity> postEntities, Pageable pageable) {
+  public Entry(int count, List<E> entities, Pageable pageable) {
     this.count = count;
-    this.postEntities = postEntities;
+    this.entities = entities;
     this.pageable = pageable;
   }
 
@@ -28,16 +28,16 @@ public class Posts {
     return count;
   }
 
-  public List<PostEntity> getPostEntities() {
-    return postEntities;
+  public List<E> getEntities() {
+    return this.entities;
   }
 
   public <T> Page<T> toPage(
-      Function<PostEntity, T> mapper) {
+      Function<E, T> mapper) {
 
     int total = this.getCount();
 
-    List<T> responses = this.postEntities.stream()
+    List<T> responses = this.entities.stream()
         .map(mapper)
         .toList();
 
