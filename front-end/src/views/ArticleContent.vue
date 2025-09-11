@@ -114,6 +114,14 @@ onMounted(() => {
   margin: 0 50px 20px 0;
   list-style: disc;
 }
+.article-content img {
+  border-radius: 15px;
+  margin: 5px auto 20px;
+  max-width: 85%;
+  max-height: 500px;
+  box-shadow: var(--shadow-2xl);
+  border: 2px solid var(--color-gruvbox-dark2);
+}
 .article-content blockquote {
   position: relative;
   /* quotes: "'" "'" "'" "'"; */
