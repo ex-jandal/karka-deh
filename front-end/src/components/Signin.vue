@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import url from '@/components/urls.json'
 
 const signinUsername = ref<string>('')
 const signinPassword = ref<string>('')
@@ -11,7 +12,7 @@ async function signin() {
     signinMessage.value = 'Not mattched Passwords.. Rewrite your password agine.'
     return
   }
-  const signinResponse = await fetch('http://localhost:8080/auth/signup', {
+  const signinResponse = await fetch(`${url.backendUrl}/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

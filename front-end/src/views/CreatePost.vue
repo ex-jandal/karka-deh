@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import url from '@/components/urls.json'
 import { ref, shallowRef, onMounted } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
@@ -48,7 +49,7 @@ function switchNormalMode(): void {
 
 async function postThePost() {
   try {
-    const data = await fetch('http://localhost:8080/posts', {
+    const data = await fetch(`${url.backendUrl}/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

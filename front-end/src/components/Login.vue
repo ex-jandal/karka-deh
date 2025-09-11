@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import url from '@/components/urls.json'
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useVueCookies } from '../components/Cookies'
@@ -11,7 +12,7 @@ const loginPassword = ref<string>('')
 let loginMessage = ref<string>('')
 
 async function login() {
-  const loginResponse = await fetch('http://localhost:8080/auth/login', {
+  const loginResponse = await fetch(`${url.backendUrl}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

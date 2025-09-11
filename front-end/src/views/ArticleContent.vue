@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import url from '@/components/urls.json'
 import Spiner from '@/components/Spiner.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -19,7 +20,7 @@ const loading = ref<Boolean>(true)
 async function getContect() {
   try {
     slug.value = `${router.currentRoute.value.params.slug}`
-    const response = await fetch(`http://localhost:8080/posts/${slug.value}`, {
+    const response = await fetch(`${url.backendUrl}/posts/${slug.value}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${cookies.get('token')}`,

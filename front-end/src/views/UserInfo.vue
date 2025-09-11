@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import url from '@/components/urls.json'
 import { ref, onMounted } from 'vue'
 import { useVueCookies } from '../components/Cookies'
 import { useRoute } from 'vue-router'
@@ -37,7 +38,7 @@ function showLogoutPopup() {
 
 onMounted(async () => {
   try {
-    const data = await fetch('http://localhost:8080/posts/me', {
+    const data = await fetch(`${url.backendUrl}/posts/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

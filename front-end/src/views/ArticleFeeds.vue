@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import url from '@/components/urls.json'
 import ArticleCard from '@/components/ArticleCard.vue'
 import ArticleContent from '@/views/ArticleContent.vue'
 import Spiner from '@/components/Spiner.vue'
@@ -32,7 +33,7 @@ const postsData = ref<PostsData>({
 })
 onMounted(() => {
   // let data =
-  fetch('http://localhost:8080/posts/all', {
+  fetch(`${url.backendUrl}/posts/all`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
