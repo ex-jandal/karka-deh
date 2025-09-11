@@ -3,8 +3,9 @@ import { ref, onMounted } from 'vue'
 import { useVueCookies } from '../components/Cookies'
 
 const cookies = useVueCookies()
-
 const username = ref<string>("")
+let haveUsername = ref(false)
+
 const barIcons = ref<object>([
   'barIcons',
   'bg-second-color',
@@ -42,6 +43,8 @@ const iconContext = ref<object>([
 function checkUsername() {
   try {
     username.value = cookies.get('loginUsername')
+    if (username.value)
+      haveUsername.value = true
   } catch {
     console.error('Not loggedIn')
   }
@@ -79,22 +82,23 @@ onMounted(() => {
       </router-link>
     </div>
 
-    <router-link v-if="username === ''" to="/login-screen" class="relative">
-      <div
-        class="left-side bg-third-color text-fourth-color transition-all shadow-lg flex flex-row justify-center gap-3 items-center m-2 h-16 w-20 sm:w-40 rounded-4xl hover:bg-fourth-color hover:text-third-color hover:rounded-3xl hover:scale-105"
-      >
-        <font-awesome-icon :icon="['fas', 'user']" />
-        <span class="hidden sm:inline">سجل الدخول</span>
-      </div>
-    </router-link>
     <router-link
-      v-else
+      v-if="haveUsername"
       to="/me"
       active-class="bg-white text-main-color"
       class="left-side bg-third-color text-fourth-color transition-all shadow-sm flex flex-row justify-center gap-3 items-center m-2 h-16 w-20 sm:w-40 rounded-4xl hover:bg-fourth-color hover:text-third-color hover:rounded-3xl hover:scale-105"
     >
       <font-awesome-icon :icon="['fas', 'user']" />
       <span class="hidden sm:inline">{{ username }}</span>
+    </router-link>
+    <router-link
+      v-else
+      to="/login-screen"
+      active-class="bg-white text-main-color"
+      class="left-side bg-third-color text-fourth-color transition-all shadow-sm flex flex-row justify-center gap-3 items-center m-2 h-16 w-20 sm:w-40 rounded-4xl hover:bg-fourth-color hover:text-third-color hover:rounded-3xl hover:scale-105"
+    >
+        <font-awesome-icon :icon="['fas', 'user']" />
+        <span class="hidden sm:inline">سجل الدخول</span>
     </router-link>
   </nav>
 </template>
